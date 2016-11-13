@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/litlapps_bbb/!svn/ver/8/trunk/BadBadMonkey/OpenGLES.framework
+END
+libGFXShared.dylib
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/litlapps_bbb/!svn/ver/8/trunk/BadBadMonkey/OpenGLES.framework/libGFXShared.dylib
+END
+OpenGLES
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/litlapps_bbb/!svn/ver/8/trunk/BadBadMonkey/OpenGLES.framework/OpenGLES
+END
+libGLImage.dylib
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/litlapps_bbb/!svn/ver/8/trunk/BadBadMonkey/OpenGLES.framework/libGLImage.dylib
+END
+libGLProgrammability.dylib
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/litlapps_bbb/!svn/ver/8/trunk/BadBadMonkey/OpenGLES.framework/libGLProgrammability.dylib
+END
