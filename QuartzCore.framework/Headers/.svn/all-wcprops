@@ -1,0 +1,107 @@
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/litlapps_bbb/!svn/ver/8/trunk/BadBadMonkey/QuartzCore.framework/Headers
+END
+CATransaction.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/litlapps_bbb/!svn/ver/8/trunk/BadBadMonkey/QuartzCore.framework/Headers/CATransaction.h
+END
+CAMediaTiming.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/litlapps_bbb/!svn/ver/8/trunk/BadBadMonkey/QuartzCore.framework/Headers/CAMediaTiming.h
+END
+CAGradientLayer.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/litlapps_bbb/!svn/ver/8/trunk/BadBadMonkey/QuartzCore.framework/Headers/CAGradientLayer.h
+END
+CAScrollLayer.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/litlapps_bbb/!svn/ver/8/trunk/BadBadMonkey/QuartzCore.framework/Headers/CAScrollLayer.h
+END
+QuartzCore.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/litlapps_bbb/!svn/ver/8/trunk/BadBadMonkey/QuartzCore.framework/Headers/QuartzCore.h
+END
+CAShapeLayer.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/litlapps_bbb/!svn/ver/8/trunk/BadBadMonkey/QuartzCore.framework/Headers/CAShapeLayer.h
+END
+CAMediaTimingFunction.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/litlapps_bbb/!svn/ver/8/trunk/BadBadMonkey/QuartzCore.framework/Headers/CAMediaTimingFunction.h
+END
+CATiledLayer.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/litlapps_bbb/!svn/ver/8/trunk/BadBadMonkey/QuartzCore.framework/Headers/CATiledLayer.h
+END
+CAReplicatorLayer.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/litlapps_bbb/!svn/ver/8/trunk/BadBadMonkey/QuartzCore.framework/Headers/CAReplicatorLayer.h
+END
+CATransform3D.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/litlapps_bbb/!svn/ver/8/trunk/BadBadMonkey/QuartzCore.framework/Headers/CATransform3D.h
+END
+CAEAGLLayer.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/litlapps_bbb/!svn/ver/8/trunk/BadBadMonkey/QuartzCore.framework/Headers/CAEAGLLayer.h
+END
+CATransformLayer.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/litlapps_bbb/!svn/ver/8/trunk/BadBadMonkey/QuartzCore.framework/Headers/CATransformLayer.h
+END
+CABase.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/litlapps_bbb/!svn/ver/8/trunk/BadBadMonkey/QuartzCore.framework/Headers/CABase.h
+END
+CALayer.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/litlapps_bbb/!svn/ver/8/trunk/BadBadMonkey/QuartzCore.framework/Headers/CALayer.h
+END
+CAAnimation.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/litlapps_bbb/!svn/ver/8/trunk/BadBadMonkey/QuartzCore.framework/Headers/CAAnimation.h
+END
+CAValueFunction.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/litlapps_bbb/!svn/ver/8/trunk/BadBadMonkey/QuartzCore.framework/Headers/CAValueFunction.h
+END
+CoreAnimation.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/litlapps_bbb/!svn/ver/8/trunk/BadBadMonkey/QuartzCore.framework/Headers/CoreAnimation.h
+END

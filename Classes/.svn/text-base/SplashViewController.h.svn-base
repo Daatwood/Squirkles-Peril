@@ -1,0 +1,18 @@
+//
+//  SplashViewController.h
+//  BadBadMonkey
+//
+//  Created by Dustin Atwood on 6/20/10.
+//  Copyright 2010 Litlapps. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+@class LoadingViewController;
+
+@interface SplashViewController : UIViewController 
+{
+	UIButton *aButton;
+	LoadingViewController *loadingView;
+}
+
+@end

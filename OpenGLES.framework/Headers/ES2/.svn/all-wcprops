@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/litlapps_bbb/!svn/ver/8/trunk/BadBadMonkey/OpenGLES.framework/Headers/ES2
+END
+gl.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/litlapps_bbb/!svn/ver/8/trunk/BadBadMonkey/OpenGLES.framework/Headers/ES2/gl.h
+END
+glext.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/litlapps_bbb/!svn/ver/8/trunk/BadBadMonkey/OpenGLES.framework/Headers/ES2/glext.h
+END

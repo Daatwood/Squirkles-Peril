@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/litlapps_bbb/!svn/ver/8/trunk/BadBadMonkey/AudioToolbox.framework/Headers
+END
+AudioConverter.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/litlapps_bbb/!svn/ver/8/trunk/BadBadMonkey/AudioToolbox.framework/Headers/AudioConverter.h
+END
+AudioFormat.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/litlapps_bbb/!svn/ver/8/trunk/BadBadMonkey/AudioToolbox.framework/Headers/AudioFormat.h
+END
+AudioFileStream.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/litlapps_bbb/!svn/ver/8/trunk/BadBadMonkey/AudioToolbox.framework/Headers/AudioFileStream.h
+END
+AudioFile.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/litlapps_bbb/!svn/ver/8/trunk/BadBadMonkey/AudioToolbox.framework/Headers/AudioFile.h
+END
+ExtendedAudioFile.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/litlapps_bbb/!svn/ver/8/trunk/BadBadMonkey/AudioToolbox.framework/Headers/ExtendedAudioFile.h
+END
+AudioServices.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/litlapps_bbb/!svn/ver/8/trunk/BadBadMonkey/AudioToolbox.framework/Headers/AudioServices.h
+END
+AudioQueue.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/litlapps_bbb/!svn/ver/8/trunk/BadBadMonkey/AudioToolbox.framework/Headers/AudioQueue.h
+END
+AUGraph.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/litlapps_bbb/!svn/ver/8/trunk/BadBadMonkey/AudioToolbox.framework/Headers/AUGraph.h
+END
+AudioToolbox.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/litlapps_bbb/!svn/ver/8/trunk/BadBadMonkey/AudioToolbox.framework/Headers/AudioToolbox.h
+END

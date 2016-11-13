@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/litlapps_bbb/!svn/ver/8/trunk/BadBadMonkey/AVFoundation.framework/Headers
+END
+AVAudioSettings.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/litlapps_bbb/!svn/ver/8/trunk/BadBadMonkey/AVFoundation.framework/Headers/AVAudioSettings.h
+END
+AVAudioSession.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/litlapps_bbb/!svn/ver/8/trunk/BadBadMonkey/AVFoundation.framework/Headers/AVAudioSession.h
+END
+AVFoundation.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/litlapps_bbb/!svn/ver/8/trunk/BadBadMonkey/AVFoundation.framework/Headers/AVFoundation.h
+END
+AVAudioRecorder.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/litlapps_bbb/!svn/ver/8/trunk/BadBadMonkey/AVFoundation.framework/Headers/AVAudioRecorder.h
+END
+AVAudioPlayer.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/litlapps_bbb/!svn/ver/8/trunk/BadBadMonkey/AVFoundation.framework/Headers/AVAudioPlayer.h
+END

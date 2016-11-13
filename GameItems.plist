@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<array>
+		<integer>2</integer>
+		<string>Squirkle</string>
+	</array>
+	<array>
+		<integer>2</integer>
+		<string>Shelby</string>
+	</array>
+	<array>
+		<integer>3</integer>
+		<string>Antenna1</string>
+	</array>
+	<array>
+		<integer>3</integer>
+		<string>Antenna2</string>
+	</array>
+	<array>
+		<integer>3</integer>
+		<string>Antenna3</string>
+	</array>
+	<array>
+		<integer>4</integer>
+		<string>Eyes1</string>
+	</array>
+	<array>
+		<integer>4</integer>
+		<string>Eyes2</string>
+	</array>
+	<array>
+		<integer>4</integer>
+		<string>Eyes3</string>
+	</array>
+	<array>
+		<integer>4</integer>
+		<string>Eyes4</string>
+	</array>
+</array>
+</plist>
