@@ -1,9 +1,9 @@
 //
 //  SliderControl.m
-//  BadBadMonkey
+//  Squirkle's Peril
 //
 //  Created by Dustin Atwood on 1/19/11.
-//  Copyright 2011 Litlapps. All rights reserved.
+//  Copyright 2011 Dustin Atwood. All rights reserved.
 //
 
 #import "SliderControl.h"
@@ -16,26 +16,25 @@
 	self = [super initWithCGRect:CGRectZero];
 	if(self != nil)
 	{
-		imageButton = [[ResourceManager sharedResourceManager] getImageWithImageNamed:@"ButtonCircle" 
-																	 withinAtlasNamed:@"InterfaceAtlas"]; //[[Image alloc] initWithImageNamed:@"imageButtonSlider"];
-		imageBar = [[ResourceManager sharedResourceManager] getImageWithImageNamed:@"SliderHorizontal" 
-																  withinAtlasNamed:@"InterfaceAtlas"];
-		[imageBar setPositionImage:pos];
+		imageButton = [[Image alloc] initWithImageNamed:@"imageButtonSlider"];
+		imageBar = [[Image alloc] initWithImageNamed:@"imageBarSlider"];
+		[imageBar setPosition:pos];
 		
-		[imageBar setPositionImage:pos];
-		[imageButton setPositionImage:pos];
+		[imageBar setPosition:pos];
+		[imageButton setPosition:pos];
 		
 		value = 0;
 		offset = pos.x - [imageBar imageWidth] / 2;
-		[self setBoundingBox:CGRectMake(pos.x - ([imageBar imageWidth] / 2), pos.y, [imageButton imageWidth], [imageButton imageHeight])];
-		[self setLocked:NO];
+		[self setBoundingBox:CGRectMake(pos.x - ([imageBar imageWidth] / 2), pos.y, [imageButton imageWidth] * 2, [imageButton imageHeight] * 2)];
+		[super setEnabled:FALSE];
 	}
 	return self;
 }
+
 // touch moved
 - (void) touchMovedAtPoint:(CGPoint)newPoint
 {
-	if(![super visible] || ![super touched])
+	if(![super enabled] || ![super touched])
 		return;
 	
 	// If the touched moved beyond the bounding box, untouch it and ignore all further attempts
@@ -46,6 +45,7 @@
 		else
 			[super setSelected:FALSE];
 		
+		//[self setSelected:[self touched]];
 	}
 	else if(![super locked])
 	{
@@ -88,9 +88,9 @@
 	target = newTarget;
 	action = newAction;
 	if([target respondsToSelector:action])
-		[super setVisible:TRUE];
+		[super setEnabled:TRUE];
 	else
-		[super setVisible:FALSE];
+		[super setEnabled:FALSE];
 }
 
 - (void) performAction
@@ -105,7 +105,7 @@
 {
 	[super render];
 
-	if(![super visible])
+	if(![super enabled])
 		return;
 	
 	[imageBar render];

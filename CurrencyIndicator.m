@@ -1,9 +1,9 @@
 //
 //  CurrencyIndicator.m
-//  BadBadMonkey
+//  Squirkle's Peril
 //
 //  Created by Dustin Atwood on 1/18/11.
-//  Copyright 2011 Litlapps. All rights reserved.
+//  Copyright 2011 Dustin Atwood. All rights reserved.
 //
 
 #import "CurrencyIndicator.h"
@@ -15,7 +15,7 @@
 
 - (id) initAtScreenPercentage:(CGPoint)screenPercentage
 {
-	if ((self = [super init])) 
+	if (self = [super init]) 
 	{
 		font = [[AngelCodeFont alloc] initWithFontImageNamed:FONT21 controlFile:FONT21 scale:1.0 filter:GL_LINEAR];
 		[font setColourFilterRed:1.0 green:1.0 blue:0.0 alpha:1.0];
@@ -37,19 +37,19 @@
 		CGPoint position, position2;
 		position.x = [[Director sharedDirector] screenBounds].size.width * (screenPercentage.x / 100); //+ ([imageIndicatorBackground imageWidth] / 2);
 		position.y = [[Director sharedDirector] screenBounds].size.height * (screenPercentage.y / 100); //- ([imageIndicatorBackground imageHeight] / 2);
-		[imageIndicatorBackground setPositionImage:position];
+		[imageIndicatorBackground setPosition:position];
 		position2 = position;
 
 		// Coins
 		position.x = position.x - [imageIndicatorBackground imageWidth] / 2;// + [imageEmblemCoins imageWidth] / 2;
-		[imageEmblemCoins setPositionImage:position];
+		[imageEmblemCoins setPosition:position];
 		positionTextCoins.x = position.x + [imageEmblemCoins imageWidth] / 2; //[font getWidthForString:@"9"] * 1.25;
 		positionTextCoins.y = position.y + [font getHeightForString:@"9"] * .60;
 		
 		
 		// Treats
 		position2.x = position2.x + [imageEmblemTreats imageWidth] * 0.75;
-		[imageEmblemTreats setPositionImage:position2];
+		[imageEmblemTreats setPosition:position2];
 		positionTextTreats.x = position2.x + [imageEmblemTreats imageWidth] / 2; //[font getWidthForString:@"9"] * 1.25;
 		positionTextTreats.y = position2.y + [font getHeightForString:@"9"] * .60;
 		

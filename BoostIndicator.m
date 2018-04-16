@@ -1,9 +1,9 @@
 //
 //  BoostIndicator.m
-//  BadBadMonkey
+//  Squirkle's Peril
 //
 //  Created by Dustin Atwood on 1/18/11.
-//  Copyright 2011 Litlapps. All rights reserved.
+//  Copyright 2011 Dustin Atwood. All rights reserved.
 //
 
 #import "BoostIndicator.h"
@@ -13,7 +13,7 @@
 
 - (id) initBoost:(int)boost atScreenPercentage:(CGPoint)screenPercentage
 {
-	if ((self = [super init])) 
+	if (self = [super init]) 
 	{
 		amountTotal = boost;
 		amountAddition = 0;
@@ -27,10 +27,10 @@
 		CGPoint position;
 		position.x = [[Director sharedDirector] screenBounds].size.width * (screenPercentage.x / 100);
 		position.y = [[Director sharedDirector] screenBounds].size.height * (screenPercentage.y / 100);
-		[imageIndicatorBackground setPositionAtScreenPrecentage:screenPercentage];
+		[imageIndicatorBackground setPositionAtScreenPrecentage:screenPercentage isRotated:NO];
 		
 		position.x = position.x - [imageIndicatorBackground imageWidth] / 2 + [imageEmblem imageWidth] / 3;
-		[imageEmblem setPositionImage:position];
+		[imageEmblem setPosition:position];
 		
 		positionText.x = position.x + [imageEmblem imageWidth] / 2; //[font getWidthForString:@"9"] * 1.25;
 		positionText.y = position.y + [font getHeightForString:@"9"] * .60;

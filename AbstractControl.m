@@ -1,9 +1,9 @@
 //
 //  AbstractControl.m
-//  BadBadMonkey
+//  Squirkle's Peril
 //
 //  Created by Dustin Atwood on 10/9/10.
-//  Copyright 2010 Litlapps. All rights reserved.
+//  Copyright 2010 Dustin Atwood. All rights reserved.
 //
 
 #import "AbstractControl.h"
@@ -11,13 +11,8 @@
 
 @implementation AbstractControl
 
-@synthesize activated, selected, touched, locked, editing, sticky, identifier;
+@synthesize enabled, activated, selected, touched, locked, editing, sticky;
 @synthesize boundingBox;
-
-- (void) dealloc
-{
-	[super dealloc];
-}
 
 // Init at Position with Width and Height
 - (id) initWithCGRect:(CGRect)rect
@@ -25,10 +20,12 @@
 	self = [super init];
 	if( self != nil)
 	{
+		sharedSettingManager = [SettingManager sharedSettingManager];
+		sharedSoundManager = [SoundManager sharedSoundManager];
+		
 		// Set Behaviors
-		[super setVisible:TRUE];
-		[super setEnabled:TRUE];
-		[self setLocked:TRUE];
+		[self setEnabled:TRUE];
+		[self setLocked:FALSE];
 		[self setSticky:FALSE];
 		
 		// Set States
@@ -50,17 +47,21 @@
 
 - (BOOL) checkBoundingBox:(CGPoint)point
 {
+	//NSLog(@"%@ <- %@",NSStringFromCGRect(CGRectMake(self.boundingBox.origin.x/* - self.boundingBox.size.width*/, self.boundingBox.origin.y/* - self.boundingBox.size.height*/,
+	//								  self.boundingBox.size.width, self.boundingBox.size.height)), 
+	// NSStringFromCGPoint(point));
+	
 	CGRect checkBox = CGRectMake(self.boundingBox.origin.x - self.boundingBox.size.width / 2, 
 								self.boundingBox.origin.y - self.boundingBox.size.height / 2, 
 								self.boundingBox.size.width, self.boundingBox.size.height);
-	checkBox = CGRectInset(checkBox, self.boundingBox.size.width * 0.1, self.boundingBox.size.height * 0.1);
 	
+	if ([self touched]) 
+	{
+		//checkBox = CGRectInset(checkBox, -self.boundingBox.size.width * .5,  -self.boundingBox.size.height * .5);
+		//NSLog(@"iBox: %F %f %f %f - %f, %f", checkBox.origin.x, checkBox.origin.y,
+		//	  checkBox.size.width,checkBox.size.height, point.x,point.y );
+	}
 	return CGRectContainsPoint(checkBox, point);
-}
-
-- (BOOL) touchable
-{
-	return ([super enabled] && [super visible] ? TRUE : FALSE);
 }
 
 // touch began
@@ -69,7 +70,7 @@
 	[self setActivated:FALSE];
 	[self setTouched:FALSE];
 	
-	if(![self touchable])
+	if(![self enabled])
 		return;
 	
 	if([self checkBoundingBox:beginPoint])
@@ -84,7 +85,7 @@
 // touch moved
 - (void) touchMovedAtPoint:(CGPoint)newPoint
 {
-	if(![self touchable] || ![self touched])
+	if(![self enabled] || ![self touched])
 		return;
 	
 	// If the touched moved beyond the bounding box, untouch it and ignore all further attempts
@@ -109,7 +110,7 @@
 // touch ended
 - (void) touchEndedAtPoint:(CGPoint)endPoint
 {
-	if(![self touchable] || ![self touched])
+	if(![self enabled] || ![self touched])
 		return;
 	
 	[self setActivated:FALSE];
@@ -136,7 +137,7 @@
 // update
 - (void) updateWithDelta:(GLfloat)delta;
 {
-	
+
 }
 
 @end

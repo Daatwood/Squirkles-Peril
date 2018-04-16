@@ -13,6 +13,8 @@
 @interface ResourceManager : NSObject 
 {
     NSMutableDictionary     *_cachedTextures;
+	NSDictionary			*_textureMap;
+	NSDictionary			*_imageResource;
 }
 
 + (ResourceManager *)sharedResourceManager;
@@ -28,5 +30,5 @@
 // Selector that releases all cached textures.
 - (void)releaseAllTextures;
 
-- (Image*)getImageWithImageNamed:(NSString*)anImage withinAtlasNamed:(NSString*)anAtlas;
+- (Image*)getImageWithImageKey:(NSString*)anImageKey andTextureAtlas:(NSString*)aTextureAtlas andOffset:(int)off;
 @end

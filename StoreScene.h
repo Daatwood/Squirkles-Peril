@@ -3,7 +3,7 @@
 //  Squirkle's Peril
 //
 //  Created by Dustin Atwood on 2/8/11.
-//  Copyright 2011 Litlapps. All rights reserved.
+//  Copyright 2011 Dustin Atwood. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -16,7 +16,18 @@
 #import "NetworkManager.h"
 
 @interface StoreScene : AbstractScene <SKPaymentTransactionObserver>
-{	
+{
+	ButtonControl* buttonBack;
+	ButtonControl* buttonPrevious;
+	ButtonControl* buttonNext;
+	ButtonControl* buttonCategoryGame;
+	ButtonControl* buttonCategoryPower;
+	ButtonControl* buttonCategoryVIP;
+	ButtonControl* buttonCategoryCurrency;
+	
+	// For Single Item
+	ButtonControl* buttonBuy;
+	
 	// For Multi Item
 	ButtonControl* buttonBuyOne;
 	ButtonControl* buttonBuyTwo;

@@ -2,8 +2,8 @@
 //  EAGLView.h
 //  OGLGame
 //
-//  Created by Michael Daley on 28/02/2009.
-//  Copyright Michael Daley 2009. All rights reserved.
+//  Created by Dustin Atwood on 28/02/2009.
+//  Copyright Dustin Atwood 2009. All rights reserved.
 //
 
 

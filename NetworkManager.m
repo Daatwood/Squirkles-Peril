@@ -1,9 +1,9 @@
 //
 //  NetworkManager.m
-//  BadBadMonkey
+//  Squirkle's Peril
 //
 //  Created by Dustin Atwood on 1/28/11.
-//  Copyright 2011 Litlapps. All rights reserved.
+//  Copyright 2011 Dustin Atwood. All rights reserved.
 //
 
 #import "NetworkManager.h"
@@ -19,8 +19,8 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(NetworkManager);
 - (id)init 
 {
 	NSLog(@"Network Manager Initializing...");
-	//[self setLatestNewsFeed:@""];
-	//[self fetchNewsFeed];
+	[self setLatestNewsFeed:@""];
+	[self fetchNewsFeed];
 	awaitingInAppResponse = FALSE;
 	return self;
 }
@@ -31,7 +31,6 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(NetworkManager);
 	NSURLRequest *request = [NSURLRequest requestWithURL:
 							 [NSURL URLWithString:@"http://api.twitter.com/1/statuses/user_timeline.json?screen_name=SquirklePeril&include_entities=false&trim_user=true&count=1"]];
 	[[NSURLConnection alloc] initWithRequest:request delegate:self];
-    [request release];
 }
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response 
 {
@@ -52,25 +51,20 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(NetworkManager);
 	
 	[self setLatestNewsFeed:[[[responseString JSONValue] objectAtIndex:0] objectForKey:@"text"]];
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"NEWS_FEED_LOADED" object:nil];
-    [responseString release];
+	//NSLog(@"News Feed Recieved");
 }
 
-- (void) requestPremium
-{
-    [self requestProduct:@"premium"];
-}
-
-- (void) requestProduct:(NSString*)productName
+- (void) requestProduct:(NSString*)productName productIndex:(int)productIndex;
 {
 	if(awaitingInAppResponse)
 	{
-		NSLog(@"Still Processing Request...");
+		//NSLog(@"Still Processing Request...");
 		return;
 	}
 	
-	NSLog(@"Sending product id: %@" , [NSString stringWithFormat:@"com.atwooddustin.squirkle.%@", productName]);
+	NSLog(@"Sending product id: %@" , [NSString stringWithFormat:@"com.atwooddustin.squirkle.%@.%D", productName, productIndex]);
     NSSet *productIdentifiers = [NSSet setWithObject:
-								 [NSString stringWithFormat:@"com.atwooddustin.squirkle.%@", productName]];
+								 [NSString stringWithFormat:@"com.atwooddustin.squirkle.%@.%D", productName, productIndex]];
     productsRequest = [[SKProductsRequest alloc] initWithProductIdentifiers:productIdentifiers];
     productsRequest.delegate = self;
     [productsRequest start];

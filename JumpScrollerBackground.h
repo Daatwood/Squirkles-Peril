@@ -1,60 +1,43 @@
 //
 //  JumpScrollerBackground.h
-//  BadBadMonkey
+//  Squirkle's Peril
 //
 //  Created by Dustin Atwood on 12/31/10.
-//  Copyright 2010 Litlapps. All rights reserved.
+//  Copyright 2010 Dustin Atwood. All rights reserved.
 //
-
-/*
- Moons, Suns and Planets are randomly added to the background and scroll at a quicker pace
- then the background. 1.5x the speed.
- The Additional Items will stay on screen until their Y reaches -200, at which they may be
- removed and another will spawn on the screen.
-*/
 
 #import <Foundation/Foundation.h>
 #import "Image.h"
 #import "Director.h"
 #import "Common.h"
-#import "SettingManager.h"
 
 @interface JumpScrollerBackground : NSObject 
 {
-    Shape_Level level;
-    
-	// Background image
-	Image* imageBackground;
-    
-    Image* imageOverlay;
+	Image* topBackground;
+	Image* midBackground;
+	Image* bottomBackground;
 	
-	// Max Distance
-	float offsetMax;
-	// Current Distance
-	float offsetCurrent;
-	// Distance that is awaiting to be added
-	float offsetAdditional;
+	float timeLength;
 	
-	float cooldownTimer;
+	// How much of the scrollAmount is added to the offset.
+	float scrollingRate;
 	
-	// Interal Background Offset
+	//How far down to scroll the bottom background
 	float offset;
-
-	Color4f colorTop;
-	Color4f colorBottom;
+	
+	int currentLevel;
+	
+	int currentStage;
 }
 
-@property(nonatomic) float offsetMax, offsetCurrent, offsetAdditional, offset;
-@property(nonatomic) Shape_Level level;
-@property(nonatomic) Color4f colorTop, colorBottom;
-
+@property(nonatomic) float timeLength;
 - (id) init;
 
 - (void) reset;
 
-- (void) changeBackgroundColor;
+- (void) adjustScrollingRate:(float)newRate;
 
-- (void) increaseBy:(float)amount;
+- (void) addScroll:(float)scrollAmount withDelta:(float)delta;
 
 - (void) updateWithDelta:(float)delta;
 

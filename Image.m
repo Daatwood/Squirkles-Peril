@@ -31,34 +31,26 @@
 @synthesize textureOffsetY;
 @synthesize rotation;
 @synthesize scale;
-@synthesize positionImage;
+@synthesize position;
 @synthesize flipVertically;
 @synthesize flipHorizontally;
 @synthesize textureCoordinates;
 @synthesize vertices;
-@synthesize identifier;
-@synthesize isColored;
 
 
 - (void)dealloc 
 {
-	if(imageName)
-		[imageName release];
-	if(texture)
-		[texture release];
-	if(textureCoordinates)
-		free(textureCoordinates);
-	if(vertices)
-		free(vertices);
-	if(indices)
-		free(indices);
+	free(textureCoordinates);
+	free(vertices);
+	free(indices);
+	[texture release];
+	[imageName release];
 	[super dealloc];
 }
 
 - (id)initWithImageNamed:(NSString*)aImage {
 	self = [super init];
-	if (self != nil) 
-	{
+	if (self != nil) {
         filter = GL_LINEAR_MIPMAP_LINEAR;
 		scale = 1.0f;
 		// Appending .png extension
@@ -110,7 +102,7 @@
 
 - (void)initImplementation 
 {
-	isColored = false;
+	
     _resourceManager = [ResourceManager sharedResourceManager];
     
     // Try to get the texture from the resource manager.  If it does not exist it will be added to
@@ -128,7 +120,7 @@
 	textureOffsetX = 0;
 	textureOffsetY = 0;
 	rotation = 0.0f;
-	positionImage = CGPointZero;
+	position = CGPointZero;
 	_colorfilter = Color4fInit;
 	flipVertically = NO;
 	flipHorizontally = NO;
@@ -153,7 +145,7 @@
 
 - (NSString *)description 
 {
-	return [NSString stringWithFormat:@"texture:%@ width:%d height:%d x:%f y:%f texWidth:%d texHeight:%d maxTexWidth:%f maxTexHeight:%f angle:%f scale:%f", [texture description], imageWidth, imageHeight, positionImage.x, positionImage.y, textureWidth, textureHeight, maxTexWidth, maxTexHeight, rotation, scale];
+	return [NSString stringWithFormat:@"texture:%@ width:%d height:%d x:%f y:%f texWidth:%d texHeight:%d maxTexWidth:%f maxTexHeight:%f angle:%f scale:%f", [texture description], imageWidth, imageHeight, position.x, position.y, textureWidth, textureHeight, maxTexWidth, maxTexHeight, rotation, scale];
 }
 
 
@@ -181,14 +173,12 @@
 	[subImage setColourFilterRed:_colorfilter.red green:_colorfilter.green blue:_colorfilter.blue alpha:_colorfilter.alpha];
 	
 	// Set the position of the subImage
-	subImage.positionImage = aPosition;
+	subImage.position = aPosition;
 	
 	// 08/05/09 - The new image now reflects the flip params correcrly
 	// Set the flip params
 	[subImage setFlipVertically:flipVertically];
 	[subImage setFlipHorizontally:flipHorizontally];
-    
-    [subImage setIsColored:isColored];
 	
     // We mark the subimage to be returned as autorelease as its the resposbility of the caller to
     // retain the returned subimage.
@@ -221,8 +211,7 @@
     // using the width and height passed in.  We only calculate the texture coordinates once for an image 
     // to help performance.
 
-	if(aOffsetPoint.x != lastTextureOffset.x || aOffsetPoint.y != lastTextureOffset.y) 
-	{
+	if(aOffsetPoint.x != lastTextureOffset.x || aOffsetPoint.y != lastTextureOffset.y) {
 		lastTextureOffset = aOffsetPoint;
 		
 		// Work out the texture coordinates 
@@ -354,12 +343,12 @@
 	CGPoint offsetPoint = CGPointMake(textureOffsetX, textureOffsetY);
 	
 	// Calculate the vertex and texcoord values for this image
-	[self calculateVerticesAtPoint:positionImage subImageWidth:imageWidth subImageHeight:imageHeight centerOfImage:YES];
+	[self calculateVerticesAtPoint:position subImageWidth:imageWidth subImageHeight:imageHeight centerOfImage:YES];
 	[self calculateTexCoordsAtOffset:offsetPoint subImageWidth:imageWidth subImageHeight:imageHeight];
 	
 	// Now that we have defined the texture coordinates and the quad vertices we can render to the screen 
 	// using them
-	[self renderAt:positionImage texCoords:textureCoordinates quadVertices:vertices];
+	[self renderAt:position texCoords:textureCoordinates quadVertices:vertices];
 }
 
 - (void)renderAtPoint:(CGPoint)aPoint centerOfImage:(BOOL)aCenter 
@@ -390,22 +379,19 @@
 }
 
 
-- (void)renderAt:(CGPoint)point texCoords:(Quad2f*)tc quadVertices:(Quad2f*)qv 
-{
+- (void)renderAt:(CGPoint)point texCoords:(Quad2f*)tc quadVertices:(Quad2f*)qv {
+
 	// Save the current matrix to the stack
 	glPushMatrix();
 	
 	// Rotate around the Z axis by the angle defined for this image
-	if (rotation != 0) 
-	{
-		glTranslatef(point.x, point.y, 0);
-		glRotatef(-rotation, 0.0f, 0.0f, 1.0f);
-		glTranslatef(-point.x, -point.y, 0);
-	}
+	glTranslatef(point.x, point.y, 0);
+	glRotatef(-rotation, 0.0f, 0.0f, 1.0f);
+	glTranslatef(-point.x, -point.y, 0);
 	
 	// Set the glColor to apply alpha to the image.  This takes into account the gloabl alpha which is managed
 	// by the sharedDirector.  This allows us to fade all objects based on the global alpha
-	glColor4f(_colorfilter.red, _colorfilter.green, _colorfilter.blue, _colorfilter.alpha);
+	glColor4f(_colorfilter.red, _colorfilter.green, _colorfilter.blue, _colorfilter.alpha * [[Director sharedDirector] globalAlpha]);
 	
 	// Set client states so that the Texture Coordinate Array will be used during rendering
 	glEnableClientState(GL_VERTEX_ARRAY);
@@ -437,7 +423,6 @@
 	
 	// Draw the vertices to the screen
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-
 	// Now we are done drawing disable blending
 	glDisable(GL_BLEND);
 	
@@ -467,33 +452,15 @@
 	_colorfilter.blue = components[2];
 }
 
-// Method used to set the colour filter for this image by giving a color4f
-- (void) setColourWithColor4f:(Color4f)color4f
-{
-    if(isColored)
-        return;
-    
-	_colorfilter = color4f;
-}
-
 - (void) setColourWithString:(NSString*)colorString
 {
-    if(isColored)
-        return;
-    
 	NSString *cString = [colorString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];  
 	
     // Proper color strings are denoted with braces  
     if (![cString hasPrefix:@"{"])
-	{
 		[self setColourFilterRed:1 green:1 blue:1 alpha:1];
-		return;
-	}
     if (![cString hasSuffix:@"}"]) 
-	{
-		[self setColourFilterRed:1 green:1 blue:1 alpha:1]; 
-		return;
-	}
+		[self setColourFilterRed:1 green:1 blue:1 alpha:1];  
 	
     // Remove braces      
     cString = [cString substringFromIndex:1];  
@@ -504,10 +471,7 @@
     NSArray *components = [cString componentsSeparatedByString:@", "];
 	
     if ([components count] != 3) 
-	{
-		[self setColourFilterRed:1 green:1 blue:1 alpha:1]; 
-		return;
-	}
+		return [self setColourFilterRed:1 green:1 blue:1 alpha:1]; 
 	
 	 // Create the color  
 	_colorfilter.red = [[components objectAtIndex:0] floatValue];
@@ -516,8 +480,7 @@
 	_colorfilter.alpha = 1.0;
 }
 
-- (void)setAlpha:(GLfloat)aAlpha 
-{
+- (void)setAlpha:(GLfloat)aAlpha {
 	_colorfilter.alpha = aAlpha;
 }
 
@@ -527,10 +490,25 @@
 	return _colorfilter.alpha;
 }
 
-- (void) setPositionAtScreenPrecentage:(CGPoint)screenPercentage
+- (void) setPositionAtScreenPrecentage:(CGPoint)screenPercentage isRotated:(BOOL)rotated
 {
-	positionImage.x = [[Director sharedDirector] screenBounds].size.width * (screenPercentage.x / 100);
-	positionImage.y = [[Director sharedDirector] screenBounds].size.height * (screenPercentage.y / 100);
+	// Portait Mode
+	if(!rotated)
+	{
+		position.x = [[Director sharedDirector] screenBounds].size.width * (screenPercentage.x / 100);
+		position.y = [[Director sharedDirector] screenBounds].size.height * (screenPercentage.y / 100);
+	}
+	// Landscape Mode
+	else
+	{
+		CGPoint pt;
+		pt.x = [[Director sharedDirector] screenBounds].size.height * (screenPercentage.x / 100);
+		pt.y = [[Director sharedDirector] screenBounds].size.width * (screenPercentage.y / 100);
+		
+		position.x = pt.y;
+		position.y = [[Director sharedDirector] screenBounds].size.height - pt.x;
+		[self setRotation:90];
+	}
 }
 
 - (Color4f) retrieveColorFilter

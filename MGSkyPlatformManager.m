@@ -3,7 +3,7 @@
 //  Squirkle's Peril
 //
 //  Created by Dustin Atwood on 2/1/11.
-//  Copyright 2011 Litlapps. All rights reserved.
+//  Copyright 2011 Dustin Atwood. All rights reserved.
 //
 
 #import "MGSkyPlatformManager.h"
@@ -89,7 +89,7 @@
 - (int) pickRandom
 {
 	if(randomPlatformsCount == 0)
-		return PlatformType_Normal;
+		return -1;
 	
 	// Randomly picks a number 0 through count; count being exclusive
 	int randomPlatformIndex = RANDOM(randomPlatformsCount);
@@ -102,7 +102,7 @@
 - (int) pickReady
 {
 	if(cooldownPlatformsCount == 0)
-		return [self pickRandom];
+		return -1;
 	
 	int cooldownPlatformsIndex = 0;
 	while(cooldownPlatformsIndex < cooldownPlatformsCount) 
@@ -119,7 +119,7 @@
 		cooldownPlatformsIndex++;
 	}
 	
-	return [self pickRandom];
+	return -1;
 }
 
 @end

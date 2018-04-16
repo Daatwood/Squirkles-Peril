@@ -1,9 +1,9 @@
 //
 //  JumpScrollerScene.h
-//  BadBadMonkey
+//  Squirkle's Peril
 //
 //  Created by Dustin Atwood on 11/21/10.
-//  Copyright 2010 Litlapps. All rights reserved.
+//  Copyright 2010 Dustin Atwood. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -11,32 +11,67 @@
 #import "Image.h"
 #import "ButtonControl.h"
 #import "CurrencyIndicator.h"
+//#import "JumpScrollerPlayer.h"
+//#import "JumpScrollerObstacle.h"
 #import "AbstractScene.h"
 #import "JumpScrollerBackground.h"
+#import "InformativeControl.h"
 #import "BoostIndicator.h"
 #import "Indicator.h"
 #import "LabelControl.h"
 #import "MGSkyPlatformManager.h"
+#import "MGSkyBanner.h"
 #import "MGSkyPlayer.h"
-#import "MGSkyEnemy.h"
+#import "MGSkyObstacle.h"
 #import "MGSkyPlatform.h"
-#import "IndicatorPlayer.h"
-#import "IndicatorFill.h"
-#import "MultiplayerManager.h"
 
-
-@interface JumpScrollerScene : AbstractScene <MultiplayerManagerLobbyDelegate, UIAlertViewDelegate>
+@interface JumpScrollerScene : AbstractScene //<NSCoding>
 {
 	//---- INTERFACE
 	// Required for quick On-Screen Writing
 	AngelCodeFont* font;
-	
-	IndicatorPlayer* indicatorPlayer;
-
+	// Displays the User's Coins
+	Indicator* coinIndicator;
+	// Displays the User's Treats
+	Indicator* treatIndicator;
+	// Displays the User's Points
+	Indicator* pointIndicator;
+	// Displays the User's Boost
+	Indicator* boostIndicator;
 	// Displays the current Level
 	LabelControl* labelLevel;
 	// Displays the current Stage
 	LabelControl* labelStage;
+	// Displays Gameover Text
+	LabelControl* labelGameover;
+	// Displays Informative Earnings
+	LabelControl* labelEarned;
+	// Displays Bonus Information
+	LabelControl* labelBonus;
+	// Displays Ending Score
+	LabelControl* labelScore;
+	// Displays HiScore
+	LabelControl* labelHiScore;
+	// Displays HiScore
+	LabelControl* labelNextLevel;
+	// Coin Winnings Image
+	Image* imageCoin;
+	// Bonus Winnings Image
+	Image* imageBonus;
+	// Earnings Background
+	Image* imageBackground;
+	// Restart Button
+	ButtonControl* buttonRestart;
+	// Back Button
+	ButtonControl* buttonArcade;
+	// Pause Button
+	ButtonControl* buttonPause;
+	// Resume Button
+	ButtonControl* buttonResume;
+	// Boost Button
+	ButtonControl* buttonBoost;
+	// Boost Button
+	ButtonControl* buttonNextLevel;
 	
 	//---- INTERALS
 	// An Array of platforms
@@ -45,18 +80,11 @@
 	MGSkyPlatformManager* platformManager;
 	// An Array of Obstacles
 	NSMutableArray* obstacles;
-	// The current Scene Color
-	Color4f stageColor;
 	
 	// The player
-	MGSkyPlayer* player1;
-    MGSkyPlayer* player2;
+	MGSkyPlayer* player;
 	// Background
 	JumpScrollerBackground* background;
-    
-    UIAlertView *alertView;
-    
-    float timer;
 	
 	// Points Earned by the player
 	int pointsPlayer;
@@ -75,55 +103,50 @@
 	int gameLevel;
 	// Current Difficulty of the Level
 	int gameStage;
-    // Current Sub-Stage
-    int gameDistance;
 
 	// The amount of platforms in a single column
 	uint platformsPerColumn;
 	// Platform Cooldowns
-	int lastMovingDirection;
-    
-	float averageDelta;
+	uint platformBouncyCD;
+	uint platformDissolveCD;
+	uint platformFakeCD;
+	uint platformNetCD;
+	uint platformShipCD;
+	uint platformExplosiveCD;
+	uint platformStarCD;
 	
-	float gameScale;
-	float gameScaleTarget;
+	//Debug Information
+	float _pointsPerSecond;
+	float _timePlayed;
+	float _pointsPerSecondUpdate;
+	float averageDelta;
 }
-
-// 
-// === BASIC
-// 
 
 // Initialize
 - (id) init;
 
-// Update
-- (void) updateWithDelta:(GLfloat)delta;
-
-// Render
-- (void) render;
-
-// 
-// === TRANSITIONS AND SETUPS
-// 
-
 // Go back to the Arcade
-- (void) loadMenuScene;
+- (void) loadArcadeScene;
 
-// Show/Setup Startup Screen
-- (void) showStartScreen;
+// Transition to next level;
+- (void) loadNextLevel;
 
-// Show/Setup Running Screen
-- (void) showRunningScreen;
+// Pause/Unpause Game
+- (void) togglePause;
 
-// Show/Setup Pause Screen
-- (void) showPauseScreen;
+// Pause Game
+- (void) pause;
+
+// Saves the current game state to allow to user to pickup where they left off
+- (void) saveGameState;
+
+- (void) loadGameState;
+
+// Attempts to use boost
+- (void) useBoost;
 
 // Notification Reponse, Sets the Game's Level
 - (void) responseSetGameLevel:(NSNotification*)newLevel;
-
-// 
-// === GAME MECHANICS
-// 
 
 // Reset the gameplay
 - (void) reset;
@@ -131,13 +154,16 @@
 // Adjust Game Parameters based on Level and Difficulty
 - (void) setGameParameters;
 
-// Reuse a platform when one has died.
-- (void) generateNextPlatform:(NSArray*)reusePlatforms;
-
 // Creates a new platform when one has died.
-- (void) generateNewPlatform;
+- (void) generateNextPlatform;
 
-// Attempts to use boost
-- (void) useBoost;
+// Calculates the Winnings
+- (void) calculateWinnings;
+
+// Update
+- (void) updateWithDelta:(GLfloat)delta;
+
+// Render
+- (void) render;
 
 @end

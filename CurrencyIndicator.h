@@ -1,9 +1,9 @@
 //
 //  CurrencyIndicator.h
-//  BadBadMonkey
+//  Squirkle's Peril
 //
 //  Created by Dustin Atwood on 1/18/11.
-//  Copyright 2011 Litlapps. All rights reserved.
+//  Copyright 2011 Dustin Atwood. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>

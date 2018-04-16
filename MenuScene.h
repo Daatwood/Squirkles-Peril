@@ -1,9 +1,9 @@
 //
 //  MenuScene.h
-//  BadBadMonkey
+//  Squirkle's Peril
 //
 //  Created by Dustin Atwood on 1/3/11.
-//  Copyright 2011 Litlapps. All rights reserved.
+//  Copyright 2011 Dustin Atwood. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -16,42 +16,53 @@
 #import "LabelControl.h"
 #import "ParticleEmitter.h"
 #import "NetworkManager.h"
-#import "IndicatorPower.h"
 
-@interface MenuScene : AbstractScene <SKPaymentTransactionObserver, UIAlertViewDelegate>
+@interface MenuScene : AbstractScene 
 {
 	NetworkManager* sharedNetworkManager;
 	
-	//IndicatorPower* indicatorPower;
+	ParticleEmitter* emitter;
 	
-	// Application Title Image
+	// The Scene Header
+	LabelControl* labelSceneHeader;
+	LabelControl* labelSceneSubHeader;
+	LabelControl* labelUserName;
+	// The Scene Header
 	Image* sceneHeader;
+	// Change Save File
+	ButtonControl* buttonChangeSaveFile;
+	// Stylize Button
+	ButtonControl* buttonStylize;
+	// Begin/Continue Story Mode Button
+	ButtonControl* buttonStoryMode;
+	// Arcade Mode Button
+	ButtonControl* buttonArcadeMode;
+	// Store Button
+	ButtonControl* buttonStore;
+	// Options Button
+	ButtonControl* buttonOptions;
 	// Pet Background Image
 	Image* imagePetBackground;
-	// Star Power Level
-	Image* imagePowerLevel;
 	// Player's Pet
 	PetActor* playerPet;
-    
-    int selectedCharacter;
+	// News Feed Information
+	LabelControl* labelNewsFeed;
+	// News Feed Background
+	Image* imageNewsFeedBackground;
 }
-
-// Loads the Character Selection Scene
-- (void) loadCharacterScene;
 
 // Loads the Stylize Scene
 - (void) loadStylizeScene;
 
-// Load Game Scene
-- (void) loadGameScene;
+// Load Arcade Minigame Selection Scene
+- (void) loadMinigameScene;
+
+// Loads the store Scene
+- (void) loadStoreScene;
 
 // Shows the game's Options
 - (void) showOptions;
 
-- (void) showNextProfile;
-
-- (void) showPreviousProfile;
-
-- (BOOL) updateSelection;
+- (void) setNewsFeed;
 
 @end

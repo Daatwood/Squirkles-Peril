@@ -69,18 +69,15 @@
 	NSUInteger		textureOffsetY;
 	float			rotation;
 	float			scale;
-	CGPoint			positionImage;
+	CGPoint			position;
     uint            filter;
 	BOOL			flipHorizontally;
 	BOOL			flipVertically;
 	Quad2f			*vertices;
 	Quad2f			*textureCoordinates;
     Color4f         *colours;
-    BOOL            isColored;
 	GLushort		*indices;
 	CGPoint         lastTextureOffset;
-	// When added to an array this will allow for identification
-	uint identifier;
 }
 
 @property(nonatomic, readonly) NSString *imageName;
@@ -93,15 +90,13 @@
 @property(nonatomic, readonly) float texHeightRatio;
 @property(nonatomic) NSUInteger textureOffsetX;
 @property(nonatomic) NSUInteger textureOffsetY;
-@property(nonatomic) CGPoint positionImage;
+@property(nonatomic) CGPoint position;
 @property(nonatomic) float rotation;
 @property(nonatomic) float scale;
 @property(nonatomic) BOOL flipVertically;
 @property(nonatomic) BOOL flipHorizontally;
 @property(nonatomic) Quad2f *vertices;
 @property(nonatomic) Quad2f *textureCoordinates;
-@property(nonatomic) uint identifier;
-@property(nonatomic) BOOL isColored;
 
 // Returns an Image instance which has been created using an image called |aImage|.  The returned
 // image has the default scale and filter.
@@ -165,13 +160,10 @@
 // Method used to get the alpha component of the colour filter for this image.
 - (GLfloat)alpha;
 
-// Method used to set the colour filter for this image by giving a color4f
-- (void) setColourWithColor4f:(Color4f)color4f;
-
 // Method used to set the colour filter for this image by given a preformatted string;
 - (void) setColourWithString:(NSString*)colorString;
 
-- (void) setPositionAtScreenPrecentage:(CGPoint)screenPercentage;
+- (void) setPositionAtScreenPrecentage:(CGPoint)screenPercentage isRotated:(BOOL)rotated;
 
 - (Color4f) retrieveColorFilter;
 

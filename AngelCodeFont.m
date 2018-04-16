@@ -18,7 +18,6 @@
 @synthesize useKerning;
 @synthesize rotation;
 @synthesize maxLength;
-@synthesize leftAlignment;
 
 - (id)initWithFontImageNamed:(NSString*)fontImage controlFile:(NSString*)controlFile scale:(float)fontScale filter:(GLenum)filter {
 	self = [self init];
@@ -28,11 +27,9 @@
 		image = [[Image alloc] initWithImageNamed:fontImage scale:fontScale filter:filter];
 		// Set the scale to be used for the font
 		scale = fontScale;
-		maxLength = 300;
+		maxLength = 1000;
 		// Set the kerningDictionary to nil.  This will be used when processing any kerning info
 		KerningDictionary = nil;
-		
-		leftAlignment = TRUE;
 		
 		// Default for kerning is off
 		useKerning = NO;
@@ -212,12 +209,11 @@
 	[characterDefinition setYOffset:[propertyValue intValue]];
 	// Character xadvance
 	propertyValue = [nse nextObject];
-	[characterDefinition setXAdvance:[propertyValue intValue] * .85];
+	[characterDefinition setXAdvance:[propertyValue intValue]];
 }
 
 // Changed 07/05/09 to add kerning
-- (void)drawStringAt:(CGPoint)point text:(NSString*)text 
-{
+- (void)drawStringAt:(CGPoint)point text:(NSString*)text {
 	
 	// TODO: Add error if string is too long using NSASSERT
 	//NSAssert(1>0, @"WARNING: Text to be rendered is too long");
@@ -229,12 +225,9 @@
 	
 	glPushMatrix();
 	
-	if(rotation > 0)
-	{
-		glTranslatef(point.x, point.y, 0);
-		glRotatef(-rotation, 0.0f, 0.0f, 1.0f);
-		glTranslatef(-point.x, -point.y, 0);
-	}
+	glTranslatef(point.x, point.y, 0);
+	glRotatef(-rotation, 0.0f, 0.0f, 1.0f);
+	glTranslatef(-point.x, -point.y, 0);
 	
 	// Enable those states necessary to draw with textures and allow blending
 	glEnable(GL_TEXTURE_2D);
@@ -256,10 +249,6 @@
 	unichar previousChar = -1;
 	int kerningAmount = 0;
 	
-	
-	if(!leftAlignment)
-		point.x -= [self getWidthForString:text];
-	
 	// Loop through all the characters in the text
 	for(int i=0; i<[text length]; i++) 
 	{
@@ -267,7 +256,7 @@
 		// Grab the unicode value of the current character
 		unichar charID = [text characterAtIndex:i];
 		
-		if(charID != '\n')
+		if(point.x != originPoint.x || charID != ' ')
 		{
 			// Look up the kerning information for the previous char and this current char
 			kerningAmount = [self kerningAmountForFirst:previousChar second:charID];
@@ -300,22 +289,16 @@
 				currentQuad++;
 			}
 		
+			// Move x based on the amount to advance for the current char
 			point.x += [charsArray[charID] xAdvance] * scale;
-		}
 		
-		// Add the following: If the X position of the character to be displayed exceeds the width of the frame (rectangle)
-		// in which the text is justified or a return character line is detected, we modify the X and Y position
-		// of the next character to display to be displayed at the beginning of the next line.
-		if (charID == '\n') 
-		{
-			point.x = originPoint.x;
-			point.y = point.y - [self getHeightForString:@"X"];
+			if(point.x > maxLength)
+			{
+				point.x = originPoint.x;
+				point.y = point.y - [self getHeightForString:@"X"];
+			}
 		}
-		else if (maxLength != 0 && point.x >= maxLength && charID == ' ') 
-		{
-			point.x = originPoint.x;
-			point.y = point.y - [self getHeightForString:@"X"];
-		}
+			
 		// Store the character just processed as the previous char for looking up any kerning info
 		previousChar = charID;
 	}
@@ -331,50 +314,7 @@
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glPopMatrix();
 }
-/*
-- (void)renderStringAt:(CGPoint)aPoint widthMargin:(CGFloat)aWidthMargin textHeight:(int)aTextHeight text:(NSString*)aText 
-{
-    
-	// Grab the scale that we will be using
-	float xScale = image.scale.x;
-	float yScale = image.scale.y;
-	int nextLineOffset = 0;
-	int startXPointPosition = aPoint.x;
-	
-	// Loop through all the characters in the text to be rendered
-	for(int i=0; i<[aText length]; i++) {
-		
-		// Grab the character value of the current character.  We take off 32 as the first
-		// 32 characters of the fonts are not used
-		unichar charID = [aText characterAtIndex:i] - 32;
-		
-		// Using the current x and y, calculate the correct position of the character using the x and y offsets for each character.
-		// This will cause the characters to all sit on the line correctly with tails below the line.  The commonHeight which has
-		// been taken from the fonts control file is used within the calculation.
-		int y = aPoint.y + nextLineOffset + (lineHeight * yScale) - (charsArray[charID].height + charsArray[charID].yOffset) * yScale;
-		int x = aPoint.x + charsArray[charID].xOffset;
-		
-		CGPoint renderPoint = CGPointMake(x, y);
-		
-		// Set the color of this character based on the fontColor
-		charsArray[charID].image.color = fontColor;
-		
-		// Render the current character at the renderPoint
-		[charsArray[charID].image renderAtPoint:renderPoint];
-		
-		// Move x based on the amount to advance for the current char
-		aPoint.x += charsArray[charID].xAdvance * xScale;
-		
-		// Add the following: If the X position of the character to be displayed exceeds the width of the frame (rectangle)
-		// in which the text is justified or a return character line is detected, we modify the X and Y position
-		// of the next character to display to be displayed at the beginning of the next line.
-		if (aPoint.x - startXPointPosition > aWidthMargin || (unichar)(charID + 32) == '\n') {
-			aPoint.x = startXPointPosition;
-			nextLineOffset -= aTextHeight;
-		}
-	}
-}
-*/
+
 
 - (int)getWidthForString:(NSString*)string {
 	// Set up stringWidth

@@ -1,21 +1,17 @@
 
 #import <OpenGLES/ES1/gl.h>
 
-#define MTIKS_KEY @"e319632fa022ef512a2fd2afc"
-#define OF_KEY @"a5X0BACNGMkOLeIaU2sA"
-#define OF_SECRET @"dNUI0uPoxEcy5SeBgd8uINIyqwwQGRsweETrNn2s"
-
 // Scene Keys
 
 #define LANDSCAPE_MODE 0
 #define PORTRATE_MODE 1
 
-#define FONT16 @"AndaleMono21"
-#define FONT21 @"AndaleMono24"
-#define FONT_LARGE @"AndaleMono32"
+#define FONT16 @"Komikandy16"
+#define FONT21 @"Komikandy21Outline"
 
+#define APP_TITLE @"Squirkle's Peril"
+#define APP_SUBTITLE @"Just Sky Climin'"
 
-// Scene Keys
 #define SCENEKEY_LOADING @"LOADING"
 #define SCENEKEY_STYLIZE @"STYLIZE"
 #define SCENEKEY_MENU @"MENU"
@@ -25,12 +21,10 @@
 #define GAMEKEY_ESCAPE @"ESCAPE"
 #define GAMEKEY_SKY @"SKY"
 #define GAMEKEY_CRYSTAL @"CRYSTAL"
-#define SCENEKEY_CHARACTER @"CHARACTER"
-
 
 #define LEVEL_UNLOCK 6
 
-#define PointsPerSecond 45
+#define PointsPerSecond 90
 #define DistancePerStage (PointsPerSecond * 60)
 
 #pragma mark -
@@ -63,41 +57,26 @@
 #pragma mark -
 #pragma mark Enumeration
 
-
-// Defines Shape_type as a value
-// Use Shape_Type when talking about level.
-typedef enum _Shape_Level
-{
-	Shape_Circle = 1,
-	Shape_Triangle = 2,
-	Shape_Square = 3,
-	Shape_Octagon = 4,
-	Shape_HoneyComb = 5,
-	Shape_Diamond = 6,
-	Shape_Star = 7,
-	Shape_Oddity = 8
-} Shape_Level;
-
 enum 
 {	
+	GameState_Running,
+	GameState_Paused,
+	GameState_Loading,
+	
 	SceneState_Idle,
 	SceneState_TransitionIn,
 	SceneState_TransitionOut,
 	SceneState_Running,
 	SceneState_Paused,
-	SceneState_GameOver
+	SceneState_GameOver,
+	
+	SceneMode_Idle,
+	SceneMode_AddItem,
+	SceneMode_AddTreat,
+	SceneMode_SelectMenu,
+	SceneMode_Editing
 };
 
-enum 
-{	
-	Button_Action = 100,
-	Button_Cancel = 101,
-	Button_Store = 102,
-	Button_Stylize = 103,
-	Button_Options = 104,
-	Button_Sound = 105,
-	Button_Music = 106
-};
 
 enum ItemType
 {
@@ -129,7 +108,7 @@ enum CurrencyType
 	CurrencyType_Boost = 2,
 	CurrencyType_Point = 3
 };
-/*
+
 enum ProfileKey
 {
 	ProfileKey_Name = 0,
@@ -162,47 +141,15 @@ enum ProfileKey
 	ProfileKey_Crystal_Level4 = 27,
 	ProfileKey_Crystal_Level5 = 28
 };
- */
-
-typedef enum _SettingsFileType
-{
-	FileType_Application = 0,
-	FileType_Player = 1,
-	FileType_Character = 2
-} SettingsFileType;
-
-typedef enum _ApplicationKey
-{
-	ProfileKey_Effects = 0,
-	ProfileKey_Music = 1
-} ApplicationKey;
-
-typedef enum _PlayerKey
-{
-	ProfileKey_Coins = 0,
-	ProfileKey_Boost = 1,
-	ProfileKey_Character = 2
-} PlayerKey;
-
-typedef enum _CharacterKey
-{
-	ProfileKey_Cost = 0,
-	ProfileKey_Color = 1,
-	ProfileKey_Part1 = 2, // Body
-	ProfileKey_Part2 = 3, // Antenna
-	ProfileKey_Part3 = 4, // Eyes
-	ProfileKey_Power = 5,
-	ProfileKey_Experience = 6,
-	ProfileKey_Level = 7,
-	ProfileKey_Stage = 8,
-	ProfileKey_Distance = 9
-} CharacterKey;
 
 enum ItemKey
 {
-	ItemKey_Character = 0,
-	ItemKey_Antenna = 1,
-    ItemKey_Eyes = 2
+	ItemKey_Type = 0,
+	ItemKey_Text = 1,
+	ItemKey_Image = 2,
+	ItemKey_Color = 3,
+	ItemKey_PCost = 4,
+	ItemKey_TCost = 5
 };
 
 enum ItemBin
@@ -276,11 +223,22 @@ enum EventDirection
 enum PlatformType
 {
 	PlatformType_Normal = 0,
-	PlatformType_Dissolve = 1,
-	PlatformType_Fake = 2,
-	PlatformType_Bouncy = 3,
-	PlatformType_FlyThru = 4,
-	PlatformType_Absorb = 5
+	PlatformType_HMoving = 1,
+	PlatformType_Dissolve = 2,
+	
+	PlatformType_Fake = 3,
+	PlatformType_Net = 4,
+	PlatformType_Bouncy = 5,
+	PlatformType_Ship = 6,
+	PlatformType_Explosive= 7,
+	PlatformType_Star = 8
+};
+
+enum PlatformTheme
+{
+	PlatformTheme_Smoke = 0,
+	PlatformTheme_Cloud = 1,
+	PlatformTheme_Space = 2
 };
 
 // Side scroller minigame
@@ -362,8 +320,6 @@ typedef struct _ObjectEventArguements
 		CGPoint movedPoint;
 		CGPoint endPoint;
 		CGPoint acceleration;
-        BOOL needsCalibrate;
-        CGPoint calibration;
 		BOOL particleEmitterNeeded;
 		CGPoint particleEmitterPosition;
 		
@@ -396,16 +352,6 @@ typedef struct _Particle {
 	GLfloat particleSize;
 	GLfloat timeToLive;
 } Particle;
-
-typedef struct _ForegroundObject 
-{
-	Vector2f position;
-    GLfloat distance;
-	GLfloat alpha;
-	GLfloat size;
-    GLfloat deltaSize;
-	GLfloat timeToLive;
-} ForegroundObject;
 
 
 typedef struct _PointSprite {
@@ -453,11 +399,6 @@ static inline CGPoint CGPointMultiply(CGPoint v, GLfloat s)
 	return (CGPoint) {v.x * s, v.y * s};
 }
 
-static inline CGPoint CGPointDivide(CGPoint v, GLfloat s)
-{
-	return (CGPoint) {v.x / s, v.y / s};
-}
-
 static inline GLfloat CGPointDot(CGPoint v1, CGPoint v2)
 {
 	return (GLfloat) v1.x * v2.x + v1.y * v2.y;
@@ -471,11 +412,6 @@ static inline GLfloat CGPointLength(CGPoint v)
 static inline CGPoint CGPointNormalize(CGPoint v)
 {
 	return CGPointMultiply(v, 1.0f/CGPointLength(v));
-}
-
-static inline float CGPointDistance(CGPoint v1, CGPoint v2)
-{
-	return sqrtf((v2.x - v1.x) * (v2.x - v1.x) - (v2.y - v1.y) * (v2.y - v1.y));
 }
 
 #pragma mark Other Additions 
@@ -533,76 +469,4 @@ static inline GLfloat Vector2fDistance(Vector2f v1, Vector2f v2)
 static inline Vector2f Vector2fNormalize(Vector2f v)
 {
 	return Vector2fMultiply(v, 1.0f/Vector2fLength(v));
-}
-
-
-// Returns the Assigned Color based on Shape
-static inline Color4f Color4fFromShapeLevel(Shape_Level n)
-{
-	switch (n) 
-	{
-		case Shape_Circle:
-			return Color4fMake(0.0, 1.0, 0.0, 1.0);
-			
-		case Shape_Triangle:
-			return Color4fMake(1.0, 1.0, 0.0, 1.0);
-			
-		case Shape_Square:
-			return Color4fMake(1.0, 0.0, 0.0, 1.0);
-			
-		case Shape_Octagon:
-			return Color4fMake(1.0, 0.5, 0.0, 1.0);
-			
-		case Shape_HoneyComb:
-			return Color4fMake(1.0, 0.0, 1.0, 1.0);
-			
-		case Shape_Diamond:
-			return Color4fMake(0.0, 1.0, 1.0, 1.0);
-			
-		case Shape_Star:
-			return Color4fMake(1.0, 1.0, 0.85, 1.0);
-			
-		case Shape_Oddity:
-			return Color4fMake(0.85, 1.0, 1.0, 1.0);
-			
-		default:
-			return Color4fMake(1.0, 1.0, 1.0, 1.0);
-	}
-}
-
-// Returns the Assigned Image based on Shape
-static inline NSString* NSStringFromShapeLevel(Shape_Level n)
-{
-	switch (n) 
-	{
-		case Shape_Circle:
-			return @"Circle32";
-			
-		case Shape_Triangle:
-			return @"Triangle32";
-			
-		case Shape_Square:
-			return @"Square32";
-			
-		case Shape_Octagon:
-			return @"Octagon32";
-			
-		case Shape_HoneyComb:
-			return @"Honeycomb32";
-			
-		case Shape_Diamond:
-			return @"Diamond32";
-			
-		case Shape_Star:
-			return @"Star32";
-			
-		case Shape_Oddity:
-			return @"Oddity32";
-			
-		default:
-		{
-			NSLog(@"Invalid Shape Level");
-			return @"";
-		}
-	}
 }

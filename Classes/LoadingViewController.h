@@ -1,9 +1,9 @@
 //
 //  ButtonViewController.h
-//  BadBadMonkey
+//  Squirkle's Peril
 //
 //  Created by Dustin Atwood on 6/20/10.
-//  Copyright 2010 Litlapps. All rights reserved.
+//  Copyright 2010 Dustin Atwood. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
@@ -13,9 +13,15 @@
 
 @interface LoadingViewController : UIViewController 
 {
-    @private
-        BOOL loadingScreenStarted;
+
+	UIButton *splashScreen;
+	UIImageView *backgroundImage;
+	UIActivityIndicatorView *loadingView;
+	UILabel *loadingLabel;
+	Director *sharedDirector;
 }
+
+- (void) displaySplashScreen;
 
 - (void) displayLoadingScreen;
 

@@ -1,12 +1,10 @@
 
 #import "SettingManager.h"
-#import "mtiks.h"
+
 
 @implementation SettingManager
 
 @synthesize selectedProfileIndex;
-@synthesize settingsCharacters;
-@synthesize isPremium;
 
 // Make this class a singleton class
 SYNTHESIZE_SINGLETON_FOR_CLASS(SettingManager);
@@ -15,94 +13,151 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(SettingManager);
 {
 	NSLog(@"Settings Manager Initializing...");
 	
+	//[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadPreviousGameFile) name:@"DID_BECOME_ACTIVE" object:nil];
+	
 	gameProfile = [[NSMutableArray alloc] initWithCapacity:1];
 	
-	settingsApplication = [[NSMutableArray alloc] initWithCapacity:1];
-	
-	settingsPlayer = [[NSMutableArray alloc] initWithCapacity:1];
-	
-	settingsCharacters = [[NSMutableArray alloc] initWithCapacity:1];
-    
-   // [[NSUserDefaults standardUserDefaults] setObject:@"0" forKey:@"PREMIUM"];
-   // [[NSUserDefaults standardUserDefaults] synchronize]; 
-   /* 
-    
-    NSString* serialKey = [[NSString alloc] initWithString:[[UIDevice currentDevice] uniqueIdentifier]];
-    NSString* premiumKey = [[NSUserDefaults standardUserDefaults] objectForKey:@"PREMIUM"];
-    if([premiumKey isEqualToString:serialKey])
-        isPremium = TRUE;
-    else
-        isPremium = FALSE;
-    */
-    // Load user profile
-	[self loadProfile];
-    
-    
-    // Load Items Plist
-	[self loadItems];
+	//[self newProfile];
+	// Initialize the arrays to be used within the state manager
+	//[self createDebugItems];
+	//[self createNewItems];
 
-    // Load Sounds
-    [[SoundManager sharedSoundManager] loadSoundWithKey:@"ButtonClick" fileName:@"Interface01" fileExt:@"caf"];
-    [[SoundManager sharedSoundManager] loadSoundWithKey:@"JumpSound" fileName:@"Effect01" fileExt:@"caf"];
-    [[SoundManager sharedSoundManager] loadSoundWithKey:@"JumpShortSound" fileName:@"Effect02" fileExt:@"caf"];
-    
-    [[mtiks sharedSession] postEvent:@"Profile" withAttributes:
-     [NSDictionary dictionaryWithObjectsAndKeys:
-      [self for:FileType_Player get:ProfileKey_Character], @"Index",
-      [self for:FileType_Character get:ProfileKey_Part1], @"Character", 
-      [self for:FileType_Character get:ProfileKey_Power], @"Level", 
-      [NSString stringWithFormat:@"%@.%@",[self for:FileType_Character get:ProfileKey_Level], [self for:FileType_Character get:ProfileKey_Stage]], @"Stage",
-      nil]];
-    
+	[self createNewItems];
+	[self loadProfile];
+	
 	return self;
 }
 
-- (BOOL) isPremium
+// Creates a new profile with given name
+- (void) newProfile
 {
-    NSString* serialKey = [NSString stringWithString:[[UIDevice currentDevice] uniqueIdentifier]];
-    NSString* premiumKey = [[NSUserDefaults standardUserDefaults] objectForKey:@"PREMIUM"];
-    if([premiumKey isEqualToString:serialKey])
-        return TRUE;
-    else
-        return TRUE;
+	/*
+	 ProfileKey_Name = 0,
+	 ProfileKey_Time = 1,
+	 ProfileKey_Vibrate = 2,
+	 ProfileKey_Effects = 3,
+	 ProfileKey_Music = 4,
+	 ProfileKey_Coins = 5,
+	 ProfileKey_Treats = 6,
+	 ProfileKey_Boost = 7,
+	 ProfileKey_Pet_Color = 8,
+	 Profilekey_Pet_Antenna = 9,
+	 ProfileKey_Pet_Eyes = 10,
+	 ProfileKey_Sky_HiScore = 11,
+	 ProfileKey_Sky_Level1 = 12,
+	 ProfileKey_Sky_Level2 = 13,
+	 ProfileKey_Sky_Level3 = 14,
+	 ProfileKey_Sky_Level4 = 15,
+	 ProfileKey_Sky_Level5 = 16,
+	 ProfileKey_Escape_HiScore = 17,
+	 ProfileKey_Sky_Level1 = 18,
+	 ProfileKey_Sky_Level2 = 19,
+	 ProfileKey_Sky_Level3 = 20,
+	 ProfileKey_Sky_Level4 = 21,
+	 ProfileKey_Sky_Level5 = 22,
+	 ProfileKey_Crystal_HiScore = 23,
+	 ProfileKey_Sky_Level1 = 24,
+	 ProfileKey_Sky_Level2 = 25,
+	 ProfileKey_Sky_Level3 = 26,
+	 ProfileKey_Sky_Level4 = 27,
+	 ProfileKey_Sky_Level5 = 28
+	 */
+	
+	// Name
+	[gameProfile addObject:@"GamePlayer"];
+	// Time
+	[gameProfile addObject:[NSDate dateWithTimeIntervalSinceNow:0]];
+	// Vibrate
+	[gameProfile addObject:@"1"];
+	// Effects
+	[gameProfile addObject:@"1"];
+	// Music
+	[gameProfile addObject:@"1"];
+	// Coins
+	[gameProfile addObject:@"100"];
+	// Treats
+	[gameProfile addObject:@"1"];
+	// Boost
+	[gameProfile addObject:@"1"];
+	// Color
+	[gameProfile addObject:[NSString stringWithFormat:@"{%F, %F, %F}", RANDOM_0_TO_1(), RANDOM_0_TO_1(), RANDOM_0_TO_1()]]; 
+	// Antenna
+	[gameProfile addObject:@"1000"];
+	// Eyes
+	[gameProfile addObject:@"1004"];
+	
+	// High Score sky
+	[gameProfile addObject:@"0"];
+	// Level1
+	[gameProfile addObject:@"1"];
+	// Level2
+	[gameProfile addObject:@"0"];
+	// Level3
+	[gameProfile addObject:@"0"];
+	// Level4
+	[gameProfile addObject:@"0"];
+	// Level5
+	[gameProfile addObject:@"0"];
+	
+	// High Score escape
+	[gameProfile addObject:@"0"];
+	// Level1
+	[gameProfile addObject:@"1"];
+	// Level2
+	[gameProfile addObject:@"0"];
+	// Level3
+	[gameProfile addObject:@"0"];
+	// Level4
+	[gameProfile addObject:@"0"];
+	// Level5
+	[gameProfile addObject:@"0"];
+	
+	// High Score crystal
+	[gameProfile addObject:@"0"];
+	// Level1
+	[gameProfile addObject:@"1"];
+	// Level2
+	[gameProfile addObject:@"0"];
+	// Level3
+	[gameProfile addObject:@"0"];
+	// Level4
+	[gameProfile addObject:@"0"];
+	// Level5
+	[gameProfile addObject:@"0"];
+	[self saveProfile];
 }
 
-- (void) forSettingsSetSoundFxOff
+// Creates a new profile with given name
+- (void) resetProfile
 {
-	NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
-	[settings setBool:NO forKey:@"sound_preference"];
-	[settings synchronize];
-}
-
-- (void) forSettingsSetSoundFxOn
-{
-	NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
-	[settings setBool:YES forKey:@"sound_preference"];
-	[settings synchronize];
-}
-
-- (void) forSettingsSetMusicOff
-{
-	NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
-	[settings setBool:NO forKey:@"music_preference"];
-	[settings synchronize];
-}
-
-- (void) forSettingsSetMusicOn
-{
-	NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
-	[settings setBool:YES forKey:@"music_preference"];
-	[settings synchronize];
-}
-
-- (BOOL) forSettingsGetSoundFx
-{
-	return [[[NSUserDefaults standardUserDefaults] objectForKey:@"sound_preference"] boolValue];
-}
-
-- (BOOL) forSettingsGetMusic
-{
-	return [[[NSUserDefaults standardUserDefaults] objectForKey:@"music_preference"] boolValue];
+    [gameProfile replaceObjectAtIndex:ProfileKey_Name withObject:@"GamePlayer"];
+	[gameProfile replaceObjectAtIndex:ProfileKey_Coins withObject:@"100"];
+	[gameProfile replaceObjectAtIndex:ProfileKey_Treats withObject:@"1"];
+	[gameProfile replaceObjectAtIndex:ProfileKey_Pet_Color withObject:[NSString stringWithFormat:@"{%F, %F, %F}", RANDOM_0_TO_1(), RANDOM_0_TO_1(), RANDOM_0_TO_1()]];
+	[gameProfile replaceObjectAtIndex:Profilekey_Pet_Antenna withObject:@"1000"];
+	[gameProfile replaceObjectAtIndex:ProfileKey_Pet_Eyes withObject:@"1004"];
+	[gameProfile replaceObjectAtIndex:ProfileKey_Boost withObject:@"1"];
+	[gameProfile replaceObjectAtIndex:ProfileKey_Time withObject:[NSDate dateWithTimeIntervalSinceNow:0]];
+	[gameProfile replaceObjectAtIndex:ProfileKey_Sky_HiScore withObject:@"0"];
+	[gameProfile replaceObjectAtIndex:ProfileKey_Sky_Level1 withObject:@"1"];
+	[gameProfile replaceObjectAtIndex:ProfileKey_Sky_Level2 withObject:@"0"];
+	[gameProfile replaceObjectAtIndex:ProfileKey_Sky_Level3 withObject:@"0"];
+	[gameProfile replaceObjectAtIndex:ProfileKey_Sky_Level4 withObject:@"0"];
+	[gameProfile replaceObjectAtIndex:ProfileKey_Sky_Level5 withObject:@"0"];
+	[gameProfile replaceObjectAtIndex:ProfileKey_Escape_HiScore withObject:@"0"];
+	[gameProfile replaceObjectAtIndex:ProfileKey_Escape_Level1 withObject:@"1"];
+	[gameProfile replaceObjectAtIndex:ProfileKey_Escape_Level2 withObject:@"0"];
+	[gameProfile replaceObjectAtIndex:ProfileKey_Escape_Level3 withObject:@"0"];
+	[gameProfile replaceObjectAtIndex:ProfileKey_Escape_Level4 withObject:@"0"];
+	[gameProfile replaceObjectAtIndex:ProfileKey_Escape_Level5 withObject:@"0"];
+	[gameProfile replaceObjectAtIndex:ProfileKey_Crystal_HiScore withObject:@"0"];
+	[gameProfile replaceObjectAtIndex:ProfileKey_Crystal_Level1 withObject:@"1"];
+	[gameProfile replaceObjectAtIndex:ProfileKey_Crystal_Level2 withObject:@"0"];
+	[gameProfile replaceObjectAtIndex:ProfileKey_Crystal_Level3 withObject:@"0"];
+	[gameProfile replaceObjectAtIndex:ProfileKey_Crystal_Level4 withObject:@"0"];
+	[gameProfile replaceObjectAtIndex:ProfileKey_Crystal_Level5 withObject:@"0"];
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"PLAYER_COLOR_CHANGE" object:nil];
+	[self saveProfile];
 }
 
 // Loads all profiles into memory 
@@ -111,192 +166,184 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(SettingManager);
 	// Loads all profiles into memory
 	NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
 	[gameProfile addObjectsFromArray:[settings objectForKey:@"Profile"]];
-	
-	[settingsApplication addObjectsFromArray:[settings objectForKey:@"APPLICATION"]];
-	[settingsPlayer addObjectsFromArray:[settings objectForKey:@"PLAYER"]];
-	[settingsCharacters addObjectsFromArray:[settings objectForKey:@"CHARACTERS"]];
-	
-	if(!settingsApplication || [settingsApplication count] == 0 || 
-	   !settingsPlayer || [settingsPlayer count] == 0 || 
-	   !settingsCharacters || [settingsCharacters count] == 0)
-	{
+	if([gameProfile count] == 0)
 		[self newProfile];
-	}
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"PLAYER_COLOR_CHANGE" object:nil];
-}
-
-// Creates a new profile
-- (void) newProfile
-{
-	if(!settingsApplication || [settingsApplication count] == 0)
-	{
-        // Set M
-		[settingsApplication addObject:@"1"];
-		[settingsApplication addObject:@"1"];
-	}
-	if(!settingsPlayer || [settingsPlayer count] == 0)
-	{
-		[settingsPlayer addObject:@"0"];
-		[settingsPlayer addObject:@"0"];
-		[settingsPlayer addObject:@"0"];
-	}
-	if(!settingsCharacters || [settingsCharacters count] == 0)
-	{
-		NSMutableArray* newCharacter = [[NSMutableArray alloc] initWithObjects:
-										// Cost
-										@"0",
-										// Color String
-										@"{0.0, 0.64, 0.32}",
-										// Parts: 1,2,3
-										@"Squirkle",@"Antenna1",@"Eyes3",
-										// Power: L,E
-										@"1",@"0",
-										// Distance: L,S,D
-										@"1",@"1",@"0", nil];
-		[settingsCharacters addObject:newCharacter];
-		for (int i = 1; i < 10; i++) 
-		{
-			[settingsCharacters addObject:[NSMutableArray arrayWithObjects:
-										   // Cost
-										   @"1000",
-										   // Color String
-										   @"{0.0, 0.64, 0.32}",
-										   // Parts: 1,2,3
-										   @"Squirkle",@"Antenna1",@"Eyes3",
-										   // Power: L,E
-										   @"1",@"0",
-										   // Distance: L,S,D
-										   @"1",@"1",@"0", nil]];
-		}
-		[newCharacter release];
-	}
-	[self saveProfile];
 }
 
 // Saves the current selected profile
 - (void) saveProfile
 {
 	// Saves the currently selected profile 
+	
 	NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
 	//[gameProfile replaceObjectAtIndex:ProfileKey_Time withObject:[NSDate dateWithTimeIntervalSinceNow:0]];
-    //[settings setObject:gameProfile forKey:@"Profile"];
-	[settings setObject:settingsApplication forKey:@"APPLICATION"];
-	[settings setObject:settingsPlayer forKey:@"PLAYER"];
-	[settings setObject:settingsCharacters forKey:@"CHARACTERS"];
+    [settings setObject:gameProfile forKey:@"Profile"];
 	[settings synchronize];
 	
 }
 
-// Returns the string for the provided property in given file
-- (NSString*) for:(SettingsFileType)file get:(uint)property
+- (void) changeProfileName
 {
-	switch (file) 
-	{
-		case FileType_Application:
-			return [settingsApplication objectAtIndex:property];
-		case FileType_Player:
-			return [settingsPlayer objectAtIndex:property];
-		case FileType_Character:
-			return [[settingsCharacters objectAtIndex: 
-					 [[settingsPlayer objectAtIndex:ProfileKey_Character] intValue]] objectAtIndex:property];
-		default:
-			return nil;
-	}
+	UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:@"Enter Profile Name" message:@"Profile Name" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
+	UITextField *myTextField = [[UITextField alloc] initWithFrame:CGRectMake(12.0, 45.0, 260.0, 25.0)];
+	[myTextField setBackgroundColor:[UIColor whiteColor]];
+	[myAlertView addSubview:myTextField];
+	//CGAffineTransform myTransform = CGAffineTransformMakeTranslation(0.0, 130.0);
+	//[myAlertView setTransform:myTransform];
+	[myAlertView show];
+	[myAlertView release];
 }
 
-// Sets the string for the provided property in given file
-- (void) for:(SettingsFileType)file set:(uint)property to:(NSString*)newValue
+- (void) saveGameFileWithVariables:(NSArray*)gameVariables;
 {
-	switch (file) 
+	NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
+    [settings setObject:gameVariables forKey:@"Game"];
+	[settings synchronize];
+}
+
+- (void) loadPreviousGameFile
+{
+	NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
+	if([settings boolForKey:@"GAME"])
 	{
-		case FileType_Application:
-		{
-			[settingsApplication replaceObjectAtIndex:property withObject:newValue];
-			break;
-		}
-		case FileType_Player:
-		{
-			[settingsPlayer replaceObjectAtIndex:property withObject:newValue];
-			
-			if(property == ProfileKey_Character)
-				[[NSNotificationCenter defaultCenter] postNotificationName:@"PLAYER_COLOR_CHANGE" object:nil];
-			
-			break;
-		}
-		case FileType_Character:
-		{
-			int currentIndex = [[settingsPlayer objectAtIndex:ProfileKey_Character] intValue];
-			
-            //NSLog(@"Replacing on Pet, Property: %d, with %@", property, newValue);
-            
-			[[settingsCharacters objectAtIndex:currentIndex] replaceObjectAtIndex:property withObject:newValue];
-			
-			if(property == ProfileKey_Color)
-				[[NSNotificationCenter defaultCenter] postNotificationName:@"PLAYER_COLOR_CHANGE" object:nil];
-			break;
-		}
-		default:
-			break;
+		NSLog(@"Game Found");
+		[[Director sharedDirector] setCurrentSceneToSceneWithKey:GAMEKEY_SKY];
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"LOAD_SKY_GAME" object:nil];
+	}
+	else
+	{
+		NSLog(@"Game Not Found");
+	}
+	/*
+	if([settings objectForKey:@"Game"])
+	{
+		NSLog(@"Game found");
+		[[Director sharedDirector] setCurrentSceneToSceneWithKey:GAMEKEY_SKY];
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"LOAD_SKY_GAME" object:[settings arrayForKey:@"Game"]];
+	}
+	 */
+}
+
+- (void) eraseGameFile
+{
+	NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
+	[settings removeObjectForKey:@"Game"];
+    [settings synchronize];
+}
+
+// Returns a profile attribute for the current selected profile
+- (NSString*) forProfileGet:(uint)profile_attribute
+{
+	return [gameProfile objectAtIndex:profile_attribute];
+}
+
+// Sets the current profile attribute to newValue
+- (void) forProfileSet:(uint)profile_attribute to:(NSString*)newValue
+{
+	[gameProfile replaceObjectAtIndex:profile_attribute withObject:newValue];
+	
+	if(profile_attribute == ProfileKey_Pet_Color)
+	{
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"PLAYER_COLOR_CHANGE" object:nil];
 	}
 	
 	[self saveProfile];
 }
 
-// Attempts to modify player coins by amount, returns false if unable to change
-- (BOOL) forPlayerAdjustCoinsBy:(int)newValue
+- (BOOL) modifyCoinsBy:(int)amount
 {
-	int currentCoins = [[self for:FileType_Player get:ProfileKey_Coins] intValue];
-	if(newValue < 0 && (currentCoins + newValue) < 0)
-		return FALSE;
+	int currentCoins = [[self forProfileGet:ProfileKey_Coins] intValue];
 	
-	int coins = currentCoins + newValue;
-	[self for:FileType_Player set:ProfileKey_Coins to:[[NSNumber numberWithInt:coins] stringValue]];
-	return TRUE;
-}
-
-// Attempts to modify player coins by amount, returns false if unable to change
-- (BOOL) forPlayerAdjustBoostBy:(int)newValue
-{
-	int currentBoost = [[self for:FileType_Player get:ProfileKey_Boost] intValue];
-	if(newValue < 0 && (currentBoost + newValue) < 0)
-		return FALSE;
-	
-	int boost = currentBoost + newValue;
-	[self for:FileType_Player set:ProfileKey_Boost to:[[NSNumber numberWithInt:boost] stringValue]];
-	return TRUE;
-}
-
-// Attempts to modify selected characters experience by amount, returns false if unable to change
-- (BOOL) forPlayerAdjustExperienceBy:(int)newValue
-{
-	int currentExp = [[self for:FileType_Character get:ProfileKey_Experience] intValue];
-	int currentPower = [[self for:FileType_Character get:ProfileKey_Power] intValue];
-	
-	
-	int exp = currentExp + newValue;
-	
-	if(exp < 0)
-		exp = 0;
-	
-	if(exp > (currentPower * 30 * 1.10))
+	if(amount < 0 && (currentCoins + amount) < 0)
 	{
-		//NSLog(@"Level up!");
-		exp -= currentPower * 30 * 1.10;
-		currentPower++;
-        [self forPlayerAdjustBoostBy:2];
+		[self showDialogHelpCoins];
+		return FALSE;
 	}
 	
-	[self for:FileType_Character set:ProfileKey_Experience to:[[NSNumber numberWithInt:exp] stringValue]];
-	[self for:FileType_Character set:ProfileKey_Power to:[[NSNumber numberWithInt:currentPower] stringValue]];
+	int coins = currentCoins + amount;
+	[self forProfileSet:ProfileKey_Coins to:[[NSNumber numberWithInt:coins] stringValue]];
+	
 	return TRUE;
+}
+
+- (BOOL) modifyTreatsBy:(int)amount
+{
+	int currentTreats = [[self forProfileGet:ProfileKey_Treats] intValue];
+	
+	if(amount < 0 && (currentTreats + amount) < 0)
+	{
+		[self showDialogHelpTreats];
+		return FALSE;
+	}
+	
+	int treats = currentTreats + amount;
+	[self forProfileSet:ProfileKey_Treats to:[[NSNumber numberWithInt:treats] stringValue]];
+	
+	return TRUE;
+}
+
+- (BOOL) modifyCoinsBy:(int)amountCoins andTreatsBy:(int)amountTreats
+{
+	int currentCoins = [[self forProfileGet:ProfileKey_Coins] intValue];
+	int currentTreats = [[self forProfileGet:ProfileKey_Treats] intValue];
+	
+	if(amountCoins < 0 && (currentCoins + amountCoins) < 0)
+	{
+		[self showDialogHelpCoins];
+		return FALSE;
+	}
+	
+	if(amountTreats < 0 && (currentTreats + amountTreats) < 0)
+	{
+		[self showDialogHelpTreats];
+		return FALSE;
+	}
+	
+	int coins = currentCoins + amountCoins;
+	[self forProfileSet:ProfileKey_Coins to:[[NSNumber numberWithInt:coins] stringValue]];
+	
+	int treats = currentTreats + amountTreats;
+	[self forProfileSet:ProfileKey_Treats to:[[NSNumber numberWithInt:treats] stringValue]];
+	
+	return TRUE;
+}
+
+
+- (void) modifyHappinessBy:(int)amount
+{
+	int happiness = [[self forProfileGet:ProfileKey_Pet_Color] intValue] + amount;
+	
+	[self forProfileSet:ProfileKey_Pet_Color to:[[NSNumber numberWithInt:happiness] stringValue]];
+}
+
+- (void) modifyBoostBy:(int)amount
+{
+	int boost = [[self forProfileGet:ProfileKey_Boost] intValue] + amount;
+	
+	[self forProfileSet:ProfileKey_Boost to:[[NSNumber numberWithInt:boost] stringValue]];
 }
 
 - (void) loadItems
 {
-	NSString* path = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"Items.plist" ];
-	/*
-    NSArray* loadedItems = [[NSArray arrayWithContentsOfFile: path]retain];
+	// Loads all items into memory
+	NSUserDefaults *itemSettings = [NSUserDefaults standardUserDefaults];
+	items = [[NSDictionary alloc] initWithDictionary:[itemSettings dictionaryForKey:@"Items"]];
+	
+	if(items == nil || [items count] == 0)
+	{
+		[self createNewItems];
+	}
+}
+
+- (void) createNewItems
+{
+	//purchasedItems = [[NSMutableArray alloc] initWithCapacity:1];
+	//equippedItems = [[NSMutableDictionary alloc] initWithCapacity:1];
+	
+	NSString* path = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: @"GameItems.plist" ];
+	NSArray* loadedItems = [[NSArray arrayWithContentsOfFile: path]retain];
 	
 	NSMutableArray* keys = [[NSMutableArray alloc] initWithCapacity:1];
 	for (int i = 0; i < [loadedItems count]; i++) 
@@ -308,52 +355,60 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(SettingManager);
 	items = [[NSDictionary alloc] initWithObjects:loadedItems forKeys:keys];
 	[loadedItems release];
 	[keys release];
-     */
-    items = [[NSArray alloc] initWithContentsOfFile:path];
-	NSLog(@"%@", [items description]);
-    
+	
+	//NSUserDefaults *itemSettings = [NSUserDefaults standardUserDefaults];
+	//[itemSettings setObject:items forKey:@"Items"];
+	
+	//[itemSettings synchronize];
 }
 
 // Gets a Item Attribute listed under a unique identification number
-
-// Now Returns the item name when given the item type and index
-- (NSString*) get:(uint)attribute withUID:(NSString*)uid
+- (NSString*) get:(uint)attribute withUID:(uint)uid
 {
-    /*
-    return [[items 
-    
-    
-    
-    NSLog(@">> %@ at %d", uid, attribute);
-    NSLog(@"items: %@", [items description]);
-    NSLog(@"item index: %@", [[items objectForKey:uid] description]);
-	NSLog(@"<< %@", [[items objectForKey:uid] objectAtIndex:attribute]);
-	return [[items objectForKey:uid] objectAtIndex:attribute];
-             */
-    return nil;
+	
+	return [[items objectForKey:[NSNumber numberWithInt:uid]] objectAtIndex:attribute];
 }
 
 // Returns True or False if the item has been purchased
-- (BOOL) purchased:(NSString*)uid
+- (BOOL) purchased:(uint)uid
 {
-	return [purchasedItems containsObject:uid];
+	return [purchasedItems containsObject:[NSNumber numberWithInt:uid]];
 }
 
 // Attempts to purchse the uid, returning true or false if the purchase was successful
-- (BOOL) purchaseItem:(NSString*)uid
+- (BOOL) purchaseItem:(uint)uid
 {
 	
 	// If the item is already on the list then exit
-	if ([purchasedItems containsObject:uid]) 
+	if ([purchasedItems containsObject:[NSNumber numberWithInt:uid]]) 
+	{
+		//NSLog(@"Failed to purchase item %D, already purchased.", uid);
 		return NO;
+	}
 	
 	// if the user cannot afford the item, exit
-	if (![self forPlayerAdjustCoinsBy:100])
+	
+	if ([[self forProfileGet:ProfileKey_Coins] intValue] < 
+		[[[items objectForKey:[NSNumber numberWithInt:uid]] objectAtIndex:ItemKey_PCost] intValue])
+	{
+		//NSLog(@"Failed to purchase item %D, Cannot afford.", uid);
 		return NO;
-    
+	}
+	
+	if ([[self forProfileGet:ProfileKey_Treats] intValue] < 
+		[[[items objectForKey:[NSNumber numberWithInt:uid]] objectAtIndex:ItemKey_TCost] intValue]) 
+	{
+		//NSLog(@"Failed to purchase item %D, Cannot afford.", uid);
+		return NO;
+	}
+	
+	// Subtract the cost from the users points n treats
+	[self modifyCoinsBy:-[[[items objectForKey:[NSNumber numberWithInt:uid]] objectAtIndex:ItemKey_PCost] intValue]];
+	[self modifyTreatsBy:-[[[items objectForKey:[NSNumber numberWithInt:uid]] objectAtIndex:ItemKey_TCost] intValue]];
+	
 	// Move the uid to the purchased list
-	[purchasedItems addObject:uid];
-
+	[purchasedItems addObject:[NSNumber numberWithInt:uid]];
+	//NSLog(@"Purchased: %D",uid);
 	return YES;
 }
 
@@ -361,18 +416,15 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(SettingManager);
 - (NSArray*) getItemsInBin:(uint)bin ofType:(uint)type;
 {
 	NSMutableArray* filterItems = [[NSMutableArray alloc] initWithCapacity:1];
-	//int indexType;
+	int indexType;
 	switch (bin) 
 	{
 		case ItemBin_All:
 		{
-			for (int i = 0; i < [[items objectAtIndex:type] count]; i++) 
+			for (int i = 0; i < [items count]; i++) 
 			{
-                [filterItems addObject:[[items objectAtIndex:type] objectAtIndex:i]];
-                
-                
-				//if([[[[items allValues] objectAtIndex:i] objectAtIndex:ItemKey_Type] intValue] == type)
-				//	[filterItems addObject:[[items allKeys] objectAtIndex:i]];
+				if([[[[items allValues] objectAtIndex:i] objectAtIndex:ItemKey_Type] intValue] == type)
+					[filterItems addObject:[[items allKeys] objectAtIndex:i]];
 			}
 			break;
 		}
@@ -387,25 +439,24 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(SettingManager);
 		}
 		case ItemBin_Stored:
 		{
-            /*
 			for (int i = 0; i < [items count]; i++) 
 			{
 				// Returns a comparable itemType 
 				indexType = [[[[items allValues] objectAtIndex:i] objectAtIndex:ItemKey_Type] intValue];
 				// Checks to make sure the type is correct and has been purchased.
-				if(indexType == type && [self purchased:[[items allKeys] objectAtIndex:i]])
+				if(indexType == type && [self purchased:[[[items allKeys] objectAtIndex:i] intValue]])
 				{
 					[filterItems addObject:[[items allKeys] objectAtIndex:i]];
+					///NSLog(@"%@",[filterItems description]);
 				}
 			}
 			break;
-             */
 		}
 		default:
 			break;
 	}
-    //NSLog(@"Filter: %@", filterItems);
-	return [filterItems autorelease];
+	//NSLog(@"Filtered: %@",[filterItems description]);
+	return filterItems;
 }
 
 // Return equipped item of a specific type
@@ -420,7 +471,7 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(SettingManager);
 }
 
 // Attepmts to equiped item.
-- (void) equipItem:(NSString*)uid
+- (void) equipItem:(uint)uid
 {
 	if(![self purchased:uid])
 		return;
@@ -429,14 +480,16 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(SettingManager);
 		return;
 	
 	// Equips the item replacing any items currently at its spot
-//	[equippedItems setValue:uid forKey:
-//	 [NSString stringWithFormat:@"%@",[self get:ItemKey_Type withUID:uid]]];
+	[equippedItems setValue:[NSNumber numberWithInt:uid] forKey:
+	 [NSString stringWithFormat:@"%D",[[self get:ItemKey_Type withUID:uid]intValue]]];
+	
+	
+	//NSLog(@"Equipping: %D In Slot: %D", uid, [[self get:ItemKey_Type withUID:uid]intValue]);
 }
 
-- (BOOL) equippable:(NSString*)uid
+- (BOOL) equippable:(uint)uid
 {
-    /*
-	int type = [[self get:ItemKey_Type withUID:uid] intValue];
+	int type = [[self get:ItemKey_Type withUID:uid]intValue];
 	
 	if(type == ItemType_Invalid)
 		return NO;
@@ -455,25 +508,26 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(SettingManager);
 	
 	if(type == ItemType_Currency)
 		return NO;
-	*/
+	
 	return YES;
 }
 
-- (BOOL) equipped:(NSString*)uid
+- (BOOL) equipped:(uint)uid
 {
-    /*
-    int type = [[self get:ItemKey_Type withUID:uid] intValue];
+	//return FALSE;
+	
+	int type = [[self get:ItemKey_Type withUID:uid]intValue];
 	
 	NSString* equippedUID = [equippedItems valueForKey:[NSString stringWithFormat:@"%D",type]];
 	if(equippedUID != nil)
 	{
 		int eUID = [equippedUID intValue];
 		
-		if(eUID == [uid intValue])
+		if(eUID == uid)
 			return TRUE;
 	}
-     */
 	return FALSE;
+	//return [[equippedItems allValues] containsObject:[NSNumber numberWithInt:uid]];
 }
 
 - (void)alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex 
@@ -492,6 +546,13 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(SettingManager);
 			{
 				[[NSNotificationCenter defaultCenter] postNotificationName:@"STORE_SHOW_TREATS" object:nil];
 				[[Director sharedDirector] setCurrentSceneToSceneWithKey:SCENEKEY_STORE];
+				break;
+			}
+			case 2:
+			{
+				UITextField *textField = (UITextField*) [actionSheet viewWithTag:75];
+				[self forProfileSet:ProfileKey_Name to:textField.text];
+				[[NSNotificationCenter defaultCenter] postNotificationName:@"PROFILE_NAME_CHANGE" object:nil];
 				break;
 			}
 			default:
@@ -533,7 +594,6 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(SettingManager);
 	[alert show];
 	[textField becomeFirstResponder];
 	[alert release];
-    [textField release];
 }
 
 @end

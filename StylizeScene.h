@@ -1,45 +1,49 @@
 //
 //  StylizeScene.h
-//  BadBadMonkey
+//  Squirkle's Peril
 //
 //  Created by Dustin Atwood on 9/20/10.
-//  Copyright 2010 Litlapps. All rights reserved.
+//  Copyright 2010 Dustin Atwood. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 #import "AbstractScene.h"
 #import "Indicator.h"
-#import "IndicatorPlayer.h"
 #import "AngelCodeFont.h"
 #import "Common.h"
 #import "ButtonControl.h"
 #import "Image.h"
 #import "PetActor.h"
+#import "OptionControl.h"
 #import "LabelControl.h"
 #import "SliderControl.h"
 
 @interface StylizeScene : AbstractScene
 {
+	// The Scene Header
+	AngelCodeFont* font;
+	
+	Indicator* coinIndicatorUser;
+	Indicator* treatIndicator;
 	Indicator* coinIndicatorCost;
-	IndicatorPlayer* indicatorPlayer;
 	
 	NSString* colorString;
 	NSString* customColorString;
 	
 	// Button Accept/Back
-	//ButtonControl* buttonBack;
-	//ButtonControl* buttonApply;
+	ButtonControl* buttonBack;
+	ButtonControl* buttonApply;
 	
 	// Button Icons
-	//NSMutableArray* buttonIcons;
+	NSMutableArray* buttonIcons;
 	
 	// Button Icons
-	//ButtonControl* buttonTopLeft;
-	//ButtonControl* buttonMidLeft;
-	//ButtonControl* buttonBottomLeft;
-	//ButtonControl* buttonTopRight;
-	//ButtonControl* buttonMidRight;
-	//ButtonControl* buttonBottomRight;
+	ButtonControl* buttonTopLeft;
+	ButtonControl* buttonMidLeft;
+	ButtonControl* buttonBottomLeft;
+	ButtonControl* buttonTopRight;
+	ButtonControl* buttonMidRight;
+	ButtonControl* buttonBottomRight;
 	
 	SliderControl* sliderRedColor;
 	LabelControl* labelRedSlider;
@@ -57,7 +61,8 @@
 	Image* imageTabTwo;
 	LabelControl* labelColor;
 	
-	Image* imageBackgroundPet;
+	Image* imagePreviewPetBackground;
+	Image* imageBackground;
 	
 	PetActor* previewPet;
 	
@@ -67,8 +72,6 @@
 	NSMutableArray* previewItems;
 	int selectedItemIndex;
 	int selectedCategoryIndex;
-	
-	BOOL tutorialOn;
 }
 
 //
@@ -77,7 +80,7 @@
 // Attempts to purchase all previewed Items and the saves them as equipped
 - (void) save;
 // Loads the menu
-- (void) loadMenuScene;
+- (void) loadMenu;
 
 //
 // -- Setting Up Different Tab Types
@@ -113,6 +116,8 @@
 - (void) setVisibleFeatureAntenna;
 // Set Visible Feature Eyes
 - (void) setVisibleFeatureEyes;
+// Set Visible Feature Pattern
+- (void) setVisibleFeaturePattern;
 // Set Visible Feature Body Type
 - (void) setVisibleFeatureBodyType;
 // Set Feature to top left icon 

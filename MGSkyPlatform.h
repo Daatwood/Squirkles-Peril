@@ -3,14 +3,13 @@
 //  Squirkle's Peril
 //
 //  Created by Dustin Atwood on 2/15/11.
-//  Copyright 2011 Litlapps. All rights reserved.
+//  Copyright 2011 Dustin Atwood. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 #import "ParticleEmitter.h"
 #import "Common.h"
 #import "MGSkyPlayer.h"
-#import "MGSkyPlatformImage.h"
 /*
  MGSkyPlatform is the new generation of platform. The older
  generation was limited on its ability to preform.The Newer
@@ -36,9 +35,10 @@
 
 @interface MGSkyPlatform : NSObject 
 {
-    ParticleEmitter *platformExplosion;
-    
-	// Images: The Ends and Mid.
+	// Emitter
+	ParticleEmitter *emitter;
+	
+	// Images
 	NSMutableArray *imagesPlatform;
 	
 	// Properties
@@ -46,13 +46,14 @@
 	BOOL readyForDeletion;
 	// If the platform is Usable
 	BOOL isUsable;
-	// The Platform's Center Position
+	// The Platform's Position
 	CGPoint positionPlatform;
+	// The Platform's Position
+	CGSize sizePlatform;
 	// The Platform's Theme
-	// PLATFORMS NO LONGER HAVE A THEME
+	int themePlatform;
 	// The Platform's Type
-    Shape_Level shape;
-	int typePlatform; 
+	int typePlatform;
 	// The Platform's Color
 	Color4f colorPlatform;
 	// Direction of Movement [(-1) - None,0 - Left,1 - Right] 
@@ -60,11 +61,14 @@
 	// Number of Supported Jumps
 	short supportedJumps;
 	// Number of Points Awarded on first jump
-	float awardPoints; 
+	float awardPoints;
 	// Points Active
 	BOOL earnedPoints;
-    
-    int yOffset;
+	
+	//Animation
+	int animationBounce;
+	float animationTimer;
+	int imageIndex;
 }
 @property(nonatomic) BOOL readyForDeletion;
 @property(nonatomic) BOOL isUsable;
@@ -74,21 +78,16 @@
 @property(nonatomic) CGSize sizePlatform;
 
 // Initialize the Platform
-- (id) initWithType:(int)type atPosition:(CGPoint)pos withMovementDirection:(int)direction;
-
-// Reset the Platform
-- (void) resetWithType:(int)type atPosition:(CGPoint)pos withMovementDirection:(int)direction;
+- (id) initWithTheme:(int)theme andType:(int)type atPosition:(CGPoint)pos;
 
 // Kills the Platform
 - (void) die;
-
-- (void) makeExplosion;
 
 // Returns the reward points
 - (int) rewardPoints;
 
 // Update's the Platform
-- (BOOL) updateWithDelta:(GLfloat)delta givenPlayer:(MGSkyPlayer*)player;
+- (void) updateWithDelta:(GLfloat)delta givenPlayer:(MGSkyPlayer*)player;
 
 // Applys accelerometer to the Platform.
 - (void) applyAccelerometer:(GLfloat)data;
@@ -97,9 +96,9 @@
 - (void) applyVelocity:(float)velocity;
 
 // Collision Check Method
-- (BOOL) hasCollidedWithPlayer:(MGSkyPlayer*)player withDelta:(GLfloat)delta;
+- (void) hasCollidedWithPlayer:(MGSkyPlayer*)player withDelta:(GLfloat)delta;
 
 // Renders the Platform
-- (void) renderWithinBounds:(CGSize)bounds;
+- (void) render;
 
 @end

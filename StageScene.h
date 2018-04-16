@@ -15,6 +15,7 @@
 #import "Image.h"
 #import "ButtonControl.h"
 #import "AngelCodeFont.h"
+#import "OptionControl.h"
 
 @interface StageScene : AbstractScene 
 {
@@ -39,6 +40,9 @@
 	ButtonControl* buttonMusic;
 	// Vibrate Button
 	ButtonControl* buttonVibrate;
+
+	// Option Control panel
+	OptionControl* optionControl;
 	
 	// Editing State
 	BOOL editing;

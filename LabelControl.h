@@ -1,33 +1,31 @@
 //
 //  LabelControl.h
-//  BadBadMonkey
+//  Squirkle's Peril
 //
 //  Created by Dustin Atwood on 1/17/11.
-//  Copyright 2011 Litlapps. All rights reserved.
+//  Copyright 2011 Dustin Atwood. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 #import "Common.h"
 #import "Director.h"
 #import "AngelCodeFont.h"
-#import "BaseControl.h"
 
-@interface LabelControl : BaseControl 
+@interface LabelControl : NSObject 
 {
-	// When added to an array this will allow for identification
-	uint identifier;
-	
 	// reference to director manager
 	AngelCodeFont* font;
 	
 	CGPoint centerPoint;
 	
 	NSString* text;
+	
+	BOOL enabled;
 }
 @property(nonatomic) CGPoint centerPoint;
 @property(nonatomic, copy) NSString* text;
+@property(nonatomic) BOOL enabled;
 @property(nonatomic, retain) AngelCodeFont* font;
-@property(nonatomic) uint identifier;
 
 - (id)initWithFontName:(NSString*)fontString;
 

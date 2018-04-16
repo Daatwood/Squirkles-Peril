@@ -2,8 +2,8 @@
 //  OGLGameController.h
 //  OGLGame
 //
-//  Created by Michael Daley on 08/05/2009.
-//  Copyright 2009 Michael Daley. All rights reserved.
+//  Created by Dustin Atwood on 08/05/2009.
+//  Copyright 2009 Dustin Atwood. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
@@ -16,11 +16,12 @@
 #import "Image.h"
 #import "AbstractScene.h"
 #import "ArcadeScene.h"
-#import "CharacterScene.h"
 #import "StylizeScene.h"
 #import "MenuScene.h"
+#import "OptionsScene.h"
+#import "StageScene.h"
+#import "SideScrollerScene.h"
 #import "JumpScrollerScene.h"
-#import "MGSkyScene.h"
 #import "BackgroundScene.h"
 #import "StoreScene.h"
 

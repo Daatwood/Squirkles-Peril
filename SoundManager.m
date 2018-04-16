@@ -228,11 +228,6 @@ void interruptionListener(	void *inClientData, UInt32 inInterruptionState) {
 
 - (NSUInteger)playSoundWithKey:(NSString*)aSoundKey gain:(ALfloat)aGain pitch:(ALfloat)aPitch location:(Vector2f)aLocation shouldLoop:(BOOL)aLoop sourceID:(NSUInteger)aSourceID 
 {	
-    //NSLog(@"Playing...");
-    
-    if(![[SettingManager sharedSettingManager] forSettingsGetSoundFx])
-        return -1;
-    
 	//if(![[SettingManager sharedSettingManager] soundOn])
 	//	return -1;
 		

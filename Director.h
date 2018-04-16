@@ -65,11 +65,12 @@
 @property (nonatomic) float screenScale;
 
 + (Director*)sharedDirector;
+
 - (void) startLoading;
 - (void) stopLoading;
 
-- (void) addSceneWithKey:(NSString*)aSceneKey scene:(AbstractScene*)aScene;
-- (BOOL) setCurrentSceneToSceneWithKey:(NSString*)aSceneKey;
-- (BOOL) transitionToSceneWithKey:(NSString*)aSceneKey;
+- (void)addSceneWithKey:(NSString*)aSceneKey scene:(AbstractScene*)aScene;
+- (BOOL)setCurrentSceneToSceneWithKey:(NSString*)aSceneKey;
+- (BOOL)transitionToSceneWithKey:(NSString*)aSceneKey;
 - (void) setCurrentSceneState:(uint)newSceneState;
 @end

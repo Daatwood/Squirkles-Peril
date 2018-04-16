@@ -13,8 +13,6 @@
 #import "AngelCodeFont.h"
 #import "ParticleEmitter.h"
 #import "MenuControl.h"
-#import "OptionsControl.h"
-#import "ParticleEmitter.h"
 
 // This is an abstract class which contains the basis for any game scene which is going
 // to be used.  A game scene is a self contained class which is responsible for updating 
@@ -38,23 +36,10 @@
 	uint			screenMode;
 	float			accelerometerSensitivity;
 	BOOL			isInitialized;
-	
-	// Interface Containers
-	// Button Container
-	NSMutableArray  *sceneControls;
-	// Image Container
-	NSMutableArray	*sceneImages;
-	// Label Container
-	NSMutableArray *sceneLabels;
 }
 
 #pragma mark -
 #pragma mark Properties
-
-// This will allow for easier integration of the buttons, labels and others.
-// Simply add the control to the array and the scene will take care of rendering,
-// updating and touch events.
-@property(retain) NSMutableArray *sceneControls, *sceneImages, *sceneLabels;
 
 // When the screen shows for the first time it will make all initalizations then.
 @property (nonatomic) BOOL isInitialized;
@@ -79,15 +64,7 @@
 // Determines how sensitive the accelerometer is to sudden movements
 @property (nonatomic) float accelerometerSensitivity;
 
-// MANAGE SCENE CONTROLS
-- (void) removeControl:(uint)sceneControlIndentifier;
-- (id) control:(uint)sceneControlIdentifier;
 
-- (void) removeImage:(uint)sceneImageIndentifier;
-- (id) image:(uint)sceneImageIndentifier;
-
-- (void) removeLabel:(uint)sceneLabelIndentifier;
-- (id) label:(uint)sceneLabelIndentifier;
 
 // This is called when it must begin loading varibles into memory.
 - (void) startLoadScene;
@@ -102,7 +79,7 @@
 // a CGPoint which has been encoded into an NSString
 - (void)updateWithTouchLocationBegan:(NSSet*)touches withEvent:(UIEvent*)event view:(UIView*)aView;
 - (void)updateWithTouchLocationMoved:(NSSet*)touches withEvent:(UIEvent*)event view:(UIView*)aView;
-- (BOOL)updateWithTouchLocationEnded:(NSSet*)touches withEvent:(UIEvent*)event view:(UIView*)aView;
+- (void)updateWithTouchLocationEnded:(NSSet*)touches withEvent:(UIEvent*)event view:(UIView*)aView;
 - (void)updateWithTouchLocationCancelled:(NSSet*)touches withEvent:(UIEvent*)event view:(UIView*)aView;
 // Selector which enables accelerometer data to be passed into the scene.
 - (void)updateWithAccelerometer:(UIAcceleration*)aAcceleration;

@@ -2,8 +2,8 @@
 //  EAGLView.m
 //  OGLGame
 //
-//  Created by Michael Daley on 28/02/2009.
-//  Copyright Michael Daley 2009. All rights reserved.
+//  Created by Dustin Atwood on 28/02/2009.
+//  Copyright Dustin Atwood 2009. All rights reserved.
 //
 
 #import <QuartzCore/QuartzCore.h>
@@ -76,13 +76,6 @@
 		// Configure and start accelerometer delegating the game controller to take the input
 		[[UIAccelerometer sharedAccelerometer] setUpdateInterval:(1.0 / 100)];
 		[[UIAccelerometer sharedAccelerometer] setDelegate:gameController];
-		
-		UITapGestureRecognizer *optionTouch = 
-		[[UITapGestureRecognizer alloc] initWithTarget:[OptionsControl sharedOptionsControl] 
-												action:@selector(showOptions)];
-		[optionTouch setNumberOfTouchesRequired:3];
-		[self addGestureRecognizer:optionTouch];
-		[optionTouch release];
     }
     return self;
 }
@@ -100,7 +93,7 @@
 	NSLog(@"Entering mainloop.");
 	// Create variables to hold the current time and calculated delta
 	CFTimeInterval		mtime;
-	float				mdelta = 0;
+	float				mdelta;
 	
 	// This is the heart of the game loop and will keep on looping until it is told otherwise
     while(true) 
@@ -113,33 +106,36 @@
         // I found this trick on iDevGames.com.  The command below pumps events which take place
         // such as screen touches etc so they are handled and then runs our code.  This means
         // that we are always in sync with VBL rather than an NSTimer and VBL being out of sync
-        while(CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0.002, TRUE) == kCFRunLoopRunHandledSource);
+        //while(CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0.002, TRUE) == kCFRunLoopRunHandledSource);
+		//NSLog(@"mainGameLoop");
         // Get the current time and calculate the delta between the lasttime and now
         mtime = CFAbsoluteTimeGetCurrent();
         mdelta += fabsf(mtime - mlastTime);
 		
 		// Forcing 30fps
-		if(mdelta > 1.0f / 30.0f)
+		if(mdelta > 1.0f / 20.0f)
 		{
-			// Update the game
-			// Possibly force a smooth fps similar to how it is forced in the game
+			// Go and update the game logic and then render the scene
 			[[gameController backgroundScene] updateWithDelta:mdelta];
 			[gameController updateScene:mdelta];
-			
-			// Render the game
 			[self drawView];
+			
 			
 			// Calculate the FPS
 			_FPSCounter += mdelta;
 			// The FPS Counter update intervals
 			if(_FPSCounter > 0.50f) 
 			{
-				_FPSCounter = 0;
+				_FPSCounter -= 0.50f;
 				float _fps = (1.0f / mdelta);
+				//NSLog(@"%F - %F", mtime , mlastTime );
+				// Set the FPS in the director
+				//[[Director sharedDirector] setAverageFramesPerSecond:(_fps + [[Director sharedDirector] framesPerSecond]) / 2 ];
 				[[Director sharedDirector] setFramesPerSecond:_fps];
 			}
 			
-			mdelta = 0;
+			mdelta = 0; //-= 1.0f / 20.0f;
+	
 		}
 		
 		// Set the lasttime to the current time ready for the next pass
@@ -154,7 +150,7 @@
 	NSLog(@"Entering Render Loop.");
 	// Create variables to hold the current time and calculated delta
 	CFTimeInterval		time;
-	//float				delta;
+	float				delta;
 	
 	// This is the heart of the game loop and will keep on looping until it is told otherwise
     while(true) 
@@ -164,14 +160,14 @@
         // autorelease pool stops the memory leak
         NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
         
-        // I found this trick on iDevGames.com.  The command below pumps events which take place
+        // Source iDevGames.com.  The command below pumps events which take place
         // such as screen touches etc so they are handled and then runs our code.  This means
         // that we are always in sync with VBL rather than an NSTimer and VBL being out of sync
         while(CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0.002, TRUE) == kCFRunLoopRunHandledSource);
 		//NSLog(@"mainGameLoop");
         // Get the current time and calculate the delta between the lasttime and now
         time = CFAbsoluteTimeGetCurrent();
-        //delta = (time - lastTime);
+        delta = (time - lastTime);
         
         // Continuous Render 
 		//[[gameController backgroundScene] updateWithDelta:delta];
@@ -187,6 +183,8 @@
 
 - (void)drawView 
 {
+	@synchronized(context)
+	{
 	// Set the current EAGLContext and bind to the framebuffer.  This will direct all OGL commands to the
 	// framebuffer and the associated renderbuffer attachment which is where our scene will be rendered
 	[EAGLContext setCurrentContext:context];
@@ -198,6 +196,7 @@
 	// Bind to the renderbuffer and then present this image to the current context
 	glBindRenderbufferOES(GL_RENDERBUFFER_OES, viewRenderbuffer);
     [context presentRenderbuffer:GL_RENDERBUFFER_OES];
+	}
 }
 
 #pragma mark -

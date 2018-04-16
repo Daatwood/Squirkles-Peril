@@ -14,8 +14,13 @@
  Previewing Items - Display items 
  
  Items:
- 1.Item Type
- 2.Image Name
+ 1.Point Cost
+ 2.Treat Cost
+ 3.Type (Eyes,Antenna,Body,Background,Foreground,DisplayItem,Overlay,Treat,Minigame)
+ Color (For Recolored Items) 
+ Text (Name of the item) NSString
+ ID (A unique identification number) 
+ Image (To locate the actual image to display) NSString
  
  ID->{...}
  Get <Trait> Given ID.
@@ -33,23 +38,14 @@
 #import "SynthesizeSingleton.h"
 #import "Common.h"
 #import "Director.h"
-#import "ResourceManager.h"
-#import "SoundManager.h"
 
 @interface SettingManager : NSObject <UIAlertViewDelegate>
 {
-    BOOL isPremium; 
-    
-	NSMutableArray* settingsApplication;
-	NSMutableArray* settingsPlayer;
-	NSMutableArray* settingsCharacters;
-	
-	
 	// All Saved User Profile;
 	NSMutableArray* gameProfile;
 	
 	// An entire list of items; uid for the key which contains an arry of attributes.
-	NSArray *items;
+	NSDictionary *items;
 	
 	// Array of all purchased UIDs
 	NSMutableArray *purchasedItems; 
@@ -60,79 +56,63 @@
 	int lastUIAlertType;
 }
 @property(nonatomic) int selectedProfileIndex;
-@property(nonatomic, readonly) NSMutableArray* settingsCharacters;
-@property(nonatomic) BOOL isPremium;
 
 + (SettingManager*)sharedSettingManager;
 
-- (BOOL) isPremium;
-
-- (void) forSettingsSetSoundFxOff;
-
-- (void) forSettingsSetSoundFxOn;
-
-- (void) forSettingsSetMusicOff;
-
-- (void) forSettingsSetMusicOn;
-
-- (BOOL) forSettingsGetSoundFx;
-
-- (BOOL) forSettingsGetMusic;
-
-// Loads all body parts into the game
+// ITEM MANAGEMENT
 - (void) loadItems;
 
-// Load the settings from memory
-- (void) loadProfile;
+- (void) createNewItems;
 
-// Save a copy of the settings
-- (void) saveProfile;
+// PROFILE MANAGEMENT
 
-// Creates a new profile
 - (void) newProfile;
 
-// Returns the string for the provided property in given file
-- (NSString*) for:(SettingsFileType)file get:(uint)property;
+// Creates a new profile with given name
+- (void) resetProfile;
 
-// Sets the string for the provided property in given file
-- (void) for:(SettingsFileType)file set:(uint)property to:(NSString*)newValue;
+// Loads all profiles into memory 
+- (void) loadProfile;
 
-// Attempts to modify player coins by amount, returns false if unable to change
-- (BOOL) forPlayerAdjustCoinsBy:(int)newValue;
+// Saves the current selected profile
+- (void) saveProfile;
 
-// Attempts to modify player boost by amount, returns false if unable to change
-- (BOOL) forPlayerAdjustBoostBy:(int)newValue;
+// Save Game File
+- (void) saveGameFileWithVariables:(NSArray*)gameVariables;
 
-// Attempts to modify selected characters experience by amount, returns false if unable to change
-- (BOOL) forPlayerAdjustExperienceBy:(int)newValue;
+// Load Games File
+- (void) loadPreviousGameFile;
+
+// Erase Game File
+- (void) eraseGameFile;
 
 // Returns a profile attribute for the current selected profile
-//- (NSString*) forProfileGet:(uint)profile_attribute;
+- (NSString*) forProfileGet:(uint)profile_attribute;
 
 // Sets the current profile attribute to newValue
-//- (void) forProfileSet:(uint)profile_attribute to:(NSString*)newValue;
+- (void) forProfileSet:(uint)profile_attribute to:(NSString*)newValue;
 
-//- (BOOL) modifyCoinsBy:(int)amount;
+- (BOOL) modifyCoinsBy:(int)amount;
 
-//- (BOOL) modifyTreatsBy:(int)amount;
+- (BOOL) modifyTreatsBy:(int)amount;
 
-//- (BOOL) modifyCoinsBy:(int)amountCoins andTreatsBy:(int)amountTreats;
+- (BOOL) modifyCoinsBy:(int)amountCoins andTreatsBy:(int)amountTreats;
 
-//- (void) modifyHappinessBy:(int)amount;
+- (void) modifyHappinessBy:(int)amount;
 
-//- (void) modifyBoostBy:(int)amount;
+- (void) modifyBoostBy:(int)amount;
 
 //- (void) createDebugItems;
 
 // Gets a Item Attribute listed under a unique identification number
-- (NSString*) get:(uint)attribute withUID:(NSString*)uid;
+- (NSString*) get:(uint)attribute withUID:(uint)uid;
 
 // Returns True or False if the item has been purchased
-- (BOOL) purchased:(NSString*)uid;
+- (BOOL) purchased:(uint)uid;
 
 // Attempts to purchse the uid, returning true or false if the purchase was successful
 // When an item is purchased it is immediately added to the stored items.
-- (BOOL) purchaseItem:(NSString*)uid;
+- (BOOL) purchaseItem:(uint)uid;
 
 // Returns an array of items of type in either: equiped, stored, all
 - (NSArray*) getItemsInBin:(uint)bin ofType:(uint)type;
@@ -141,13 +121,13 @@
 - (uint) getEquippedItemOfType:(uint)type;
 
 // Attepmts to equiped item.
-- (void) equipItem:(NSString*)uid;
+- (void) equipItem:(uint)uid;
 
 // Returns True or False if the item is equipped
-- (BOOL) equipped:(NSString*)uid;
+- (BOOL) equipped:(uint)uid;
 
 // Returns true or false if the item can be equipped
-- (BOOL) equippable:(NSString*)uid;
+- (BOOL) equippable:(uint)uid;
 
 - (void) showDialogHelpCoins;
 

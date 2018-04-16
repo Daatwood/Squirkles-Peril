@@ -1,9 +1,9 @@
 //
 //  JumpScrollerBackground.m
-//  BadBadMonkey
+//  Squirkle's Peril
 //
 //  Created by Dustin Atwood on 12/31/10.
-//  Copyright 2010 Litlapps. All rights reserved.
+//  Copyright 2010 Dustin Atwood. All rights reserved.
 //
 
 #import "JumpScrollerBackground.h"
@@ -11,104 +11,82 @@
 
 @implementation JumpScrollerBackground
 
-@synthesize offsetMax, offsetCurrent, offsetAdditional, offset, level, colorTop, colorBottom;
+@synthesize timeLength;
 
 - (id) init
 {
-	if((self = [super init]))
+	if(self = [super init])
 	{
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeBackgroundColor) name:@"PLAYER_COLOR_CHANGE" object:nil];
-		
-        
-		offsetMax = 100;
-		offsetCurrent = 0;
-		offsetAdditional = 0;
+		currentStage = 2;
+		currentLevel = 1;
 		offset = 0;
+		scrollingRate = 1;
 		
-		cooldownTimer = 0;
-		
-		imageBackground = [[Image alloc] initWithImageNamed:@"BackgroundTexture"];
-        [self changeBackgroundColor];
+		bottomBackground = [[Image alloc] initWithImageNamed:@"imageBackground1-3"];
+		midBackground = [[Image alloc] initWithImageNamed:@"imageBackground1-1"];
+		topBackground = [[Image alloc] initWithImageNamed:@"imageBackground1-2"];
 	}
 	return self;
 }
 
 - (void) reset
 {
-    [self setOffsetCurrent:0];
-	[self setOffsetAdditional:0];
-	[self setOffset:0];
+	currentStage = 2;
+	currentLevel = 1;
+	offset = 0;
+	scrollingRate = 0;
+	[bottomBackground release];
+	bottomBackground = [[Image alloc] initWithImageNamed:@"imageBackground1-3"];
+	[midBackground release];
+	midBackground = [[Image alloc] initWithImageNamed:@"imageBackground1-1"];
+	[topBackground release];
+	topBackground = [[Image alloc] initWithImageNamed:@"imageBackground1-2"];
 }
 
-- (void) changeBackgroundColor
+- (void) adjustScrollingRate:(float)newRate
 {
-    NSString* colorString = [[SettingManager sharedSettingManager] for:FileType_Character get:ProfileKey_Color];
-    
-    colorTop = Color4fMake(1.0f, 1.0f, 1.0f, 1.0f);
-    
-    // Proper color strings are denoted with braces  
-    if ([colorString hasPrefix:@"{"] && [colorString hasSuffix:@"}"])
-    {
-        // Remove braces      
-        colorString = [colorString substringFromIndex:1];  
-        colorString = [colorString substringToIndex:([colorString length] - 1)];  
-        
-        // Separate into components by removing commas and spaces  
-        NSArray *components = [colorString componentsSeparatedByString:@", "];
-        
-        if ([components count] == 3) 
-        {
-            colorTop = Color4fMake(1.0 - [[components objectAtIndex:0] floatValue], 
-                                   1.0 - [[components objectAtIndex:1] floatValue], 
-                                   1.0 - [[components objectAtIndex:2] floatValue], 
-                                   1.0);
-        }
-    }
-    colorBottom = colorTop;
+	scrollingRate = newRate;
 }
 
-- (void) increaseBy:(float)amount
+- (void) addScroll:(float)scrollAmount withDelta:(float)delta;
 {
-	offsetCurrent += amount;
-   
+	if(timeLength == 0)
+		timeLength = 1;
+	
+	offset += (scrollAmount) / scrollingRate; //(PointsPerSecond * timeLength);
+	if (offset > [Director sharedDirector].screenBounds.size.height) 
+	{
+		offset = 0;
+		currentStage++;
+		if(currentStage > 3)
+		{
+			currentStage = 1;
+			currentLevel++;
+			if(currentLevel > 3)
+			{
+				currentLevel = 3;
+				currentStage = 3;
+			}
+		}
+		[bottomBackground release];
+		bottomBackground = [midBackground retain];
+		[midBackground release];
+		midBackground = [topBackground retain];
+		[topBackground release];
+		topBackground = [bottomBackground retain];
+	}
 }
 
 - (void) updateWithDelta:(float)delta
 {
-	if(cooldownTimer == 0)
-	{
-        offset = (offsetCurrent / offsetMax) * 960;
-		if (offset > 960) 
-		{
-			[[NSNotificationCenter defaultCenter] postNotificationName:@"INCREASE_GAME_STAGE" object:nil];
-            [[SettingManager sharedSettingManager] forPlayerAdjustBoostBy:1];
-			offset = 0;
-			offsetCurrent = 0;
-		}
-		
-		cooldownTimer = 0.05;
-	}
-	else if(cooldownTimer < 0)
-		cooldownTimer = 0;
-	else
-	{
-		cooldownTimer -= delta;
-		if(cooldownTimer < 0)
-			cooldownTimer = 0;
-	}
+	
 }
 
 - (void) render
 {
-	[imageBackground setColourWithColor4f:colorBottom];
-	[imageBackground renderAtPoint:CGPointMake(-320, 0 - offset - 240) centerOfImage:NO];
-	[imageBackground renderAtPoint:CGPointMake(320, 0 - offset - 240) centerOfImage:NO];
-	
-	[imageBackground setColourWithColor4f:colorTop];
-	[imageBackground renderAtPoint:CGPointMake(-320, 960 - offset - 240) centerOfImage:NO];
-	[imageBackground renderAtPoint:CGPointMake(320, 960 - offset - 240) centerOfImage:NO];
-    
-    //[imageOverlay renderAtPoint:CGPointMake(160, 240) centerOfImage:YES];
+	[bottomBackground renderAtPoint:CGPointMake(0.0,-[Director sharedDirector].screenBounds.size.height - offset) centerOfImage:NO];
+	[midBackground renderAtPoint:CGPointMake(0.0, -offset) centerOfImage:NO];
+	[topBackground renderAtPoint:CGPointMake(0.0, [Director sharedDirector].screenBounds.size.height - offset) centerOfImage:NO];
 }
 
 @end

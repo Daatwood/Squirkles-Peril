@@ -1,9 +1,9 @@
 //
 //  PetActor.h
-//  BadBadMonkey
+//  Squirkle's Peril
 //
 //  Created by Dustin Atwood on 9/20/10.
-//  Copyright 2010 Litlapps. All rights reserved.
+//  Copyright 2010 Dustin Atwood. All rights reserved.
 //
 
 // PetActor setups and creates the pet.
@@ -16,11 +16,14 @@
 #import <Foundation/Foundation.h>
 #import "SettingManager.h"
 #import "Image.h"
-#import "Common.h"
 
 @interface PetActor : NSObject 
 {
 	SettingManager* sharedSettingManager;
+	
+	// The current state the pet is in: Excited, Happy, Sad, Angry, Normal.
+	// The state also affects the pet's current emotion displayed.
+	uint petState;
 	
 	// The super position and also its touch area size.
 	CGRect boundingBox;
@@ -30,53 +33,54 @@
 	
 	// The individual images of the pet.
 	Image* bodyImage;
-	NSMutableArray* eyesImage;
+	Image* feetImage;
+	Image* eyesImage;
 	Image* topperImage;
 	Image* mouthImage;
-    
-    BOOL renderPet;
 	
-	// Color of the Character
-	NSString* colorCharacter;
-    
-    float animationTimer;
-    int eyesIndex;
-    
-    Image* imageCharacter;
+	// The anger emotion of the pet; 0-100
+	float angerEmotion;
+	
+	// The happy and sad emotion; 0 - 500
+	float happyEmotion;
 }
-@property(nonatomic) BOOL renderPet;
 @property(nonatomic) uint petState;
 @property(nonatomic) CGRect boundingBox;
 @property(nonatomic) float scale;
-@property(nonatomic, retain) NSString* colorCharacter;
 
-// Show Creation Image 
-- (void) loadNewCharacterCreation;
+- (id) initWithState:(int)state;
 
-// Sets all the images based on the default file setting
-- (void) loadPartsFromFile;
+// Increases or Decreases anger, cannot exceed 100
+- (void) adjustAngerBy:(float)value;
 
-// Sets all the images based on the specific character settings
-- (void) loadPartsFrom:(uint)characterIndex;
+// Increases or Decreases happiness, cannot exceed 500
+- (void) adjustHappyBy:(float)value;
 
-// Sets the given part based on the provided uid
-- (void) loadPart:(uint)part withUID:(NSString*)uid characterUID:(NSString*)uidAtlas;
+// The emotion level of the pet
+- (int) retrieveEmotionLevel;
 
-// Sets all the parts to string
-- (void) adjustToColorString:(NSString*)color;
+- (NSString*) retrieveEmotionName;
 
-- (void) updateWithDelta:(float)delta;
-/*
 // Updates the images to match the settings.
 - (void) adjustImages;
 
 // Updates the images by forcing the items;
 - (void) adjustImagesWithUID:(NSArray*)uids andColor:(NSString*)colorString;
 
-- (void) set:(uint)bodyPart toUID:(uint)uid;
-*/
+// touch began
+- (void) touchBeganAtPoint:(CGPoint)beginPoint;
+
+// touch moved
+- (void) touchMovedAtPoint:(CGPoint)newPoint;
+
+// touch ended
+- (void) touchEndedAtPoint:(CGPoint)endPoint;
+
 // render
 - (void) render;
+
+// update
+- (void) updateWithDelta:(GLfloat)delta;
 
 - (void) adjustScale:(float)newScale;
 

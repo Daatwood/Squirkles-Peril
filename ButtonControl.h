@@ -1,9 +1,9 @@
 //
 //  ButtonControl.h
-//  BadBadMonkey
+//  Squirkle's Peril
 //
 //  Created by Dustin Atwood on 9/20/10.
-//  Copyright 2010 Litlapps. All rights reserved.
+//  Copyright 2010 Dustin Atwood. All rights reserved.
 //
 
 // Button class is a simple control class that performs an
@@ -35,15 +35,16 @@
 @interface ButtonControl : AbstractControl 
 {
 	AngelCodeFont* font;
-	
 	NSString* text;
 	
 	CGPoint textPosition;
 	
 	// Normal Image, the image when the button is idle
-	Image* imageButton;
+	Image* buttonImage;
+	// Selected Image, the image when the button is selected
+	Image* buttonImageSelect;
+	
 	Image* imageSubButton;
-	Image* imageLock;
 	
 	// Image Scale
 	float scale;
@@ -55,34 +56,34 @@
 	id target;
 	// Action, the action that will be called within the target
 	SEL action;
+	// Determines if a lock icon is drawn on the control
+	BOOL drawLock;
 }
 @property (nonatomic, retain) AngelCodeFont* font;
+@property (nonatomic) BOOL drawLock; 
 @property (nonatomic) float scale, rotation;
 
-// Init Variables
-- (id) initAsButtonImageNamed:(NSString*)imageName withSubImageNamed:(NSString*)subImageName atScreenPercentage:(CGPoint)screenPercentage;
-- (id) initAsButtonImageNamed:(NSString*)imageName withText:(NSString*)buttonText withFontName:(NSString*)fontName atScreenPercentage:(CGPoint)screenPercentage;
-- (id) initAsAtlasButtonImageNamed:(NSString*)imageName withSubImageNamed:(NSString*)subImageName atScreenPercentage:(CGPoint)screenPercentage;
-- (id) initAsAtlasButtonImageNamed:(NSString*)imageName withText:(NSString*)buttonText withFontName:(NSString*)fontName atScreenPercentage:(CGPoint)screenPercentage;
+- (id) initAsButtonImageNamed:(NSString*)imageName withText:(NSString*)buttonText selectionImage:(BOOL)sel atPosition:(CGPoint)pos;
+- (id) initAsButtonImageNamed:(NSString*)imageName withSubImageNamed:(NSString*)subImageName atScreenPercentage:(CGPoint)screenPercentage isRotated:(BOOL)rotated;
+- (id) initAsButtonImageNamed:(NSString*)imageName withText:(NSString*)buttonText atScreenPercentage:(CGPoint)screenPercentage isRotated:(BOOL)rotated;
+- (id) initAsButtonImageNamed:(NSString*)imageName selectionImage:(BOOL)sel atPosition:(CGPoint)pos;
 
-// Alter Color
 - (void) setFontColourFilterRed:(float)red green:(float)green  blue:(float)blue alpha:(float)alpha; 
+
 - (void) setButtonColourFilterRed:(float)red green:(float)green  blue:(float)blue alpha:(float)alpha; 
+
+- (void) setSubImageColourFilterRed:(float)red green:(float)green  blue:(float)blue alpha:(float)alpha; 
+
 - (void) setButtonColourWithString:(NSString*)colorString;
-- (void) setImageColourFilterRed:(float)red green:(float)green  blue:(float)blue alpha:(float)alpha; 
 
-// Setup Button Images
+- (void) setButtonImage:(NSString*)newImage withSelectionImage:(BOOL)sel;
+
 - (void) setButtonImageNamed:(NSString*)imageName withSubImageNamed:(NSString*)subImageName;
-- (void) setAtlasButtonImageNamed:(NSString*)imageName withSubImageNamed:(NSString*)subImageName;
 
-// Changes the Text
 - (void) setText:(NSString*)newText;
 
-// Changes the Action
 - (void) setTarget:(id)newTarget andAction:(SEL)newAction;
-- (void) performAction;
 
-// Changes the Position
-- (void) setAtScreenPercentage:(CGPoint)screenPercentage;
+- (void) performAction;
 
 @end

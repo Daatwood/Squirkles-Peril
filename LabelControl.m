@@ -1,9 +1,9 @@
 //
 //  LabelControl.m
-//  BadBadMonkey
+//  Squirkle's Peril
 //
 //  Created by Dustin Atwood on 1/17/11.
-//  Copyright 2011 Litlapps. All rights reserved.
+//  Copyright 2011 Dustin Atwood. All rights reserved.
 //
 
 #import "LabelControl.h"
@@ -11,7 +11,7 @@
 
 @implementation LabelControl
 
-@synthesize text, font, centerPoint, identifier;
+@synthesize text, enabled, font, centerPoint;
 
 - (id)initWithFontName:(NSString*)fontString;
 {
@@ -19,6 +19,7 @@
 	{
 		font = [[AngelCodeFont alloc] initWithFontImageNamed:fontString controlFile:fontString scale:1.0f filter:GL_LINEAR];
 		centerPoint = CGPointZero;
+		[self setEnabled:TRUE];
 	}
 	return self;
 }
@@ -35,7 +36,7 @@
 
 - (void) render
 {
-	if(![super visible])
+	if(![self enabled])
 		return;
 	
 	[font drawStringAt:centerPoint text:text];

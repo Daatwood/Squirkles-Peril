@@ -2,8 +2,8 @@
 //  OGLGameController.m
 //  OGLGame
 //
-//  Created by Michael Daley on 08/05/2009.
-//  Copyright 2009 Michael Daley. All rights reserved.
+//  Created by Dustin Atwood on 08/05/2009.
+//  Copyright 2009 Dustin Atwood. All rights reserved.
 //
 
 #import "OGLGameController.h"
@@ -50,9 +50,25 @@
 		AbstractScene *scene = [[MenuScene alloc] init];
 		[[Director sharedDirector] addSceneWithKey:SCENEKEY_MENU scene:scene];
         [scene release];
-        
+		
+		scene = [[OptionsScene alloc] init];
+		[[Director sharedDirector] addSceneWithKey:SCENEKEY_OPTIONS scene:scene];
+		[scene release];
+		
+		scene = [[StoreScene alloc] init];
+		[[Director sharedDirector] addSceneWithKey:SCENEKEY_STORE scene:scene];
+		[scene release];
+		
+		scene = [[ArcadeScene alloc] init];
+		[[Director sharedDirector] addSceneWithKey:SCENEKEY_ARCADE scene:scene];
+		[scene release];
+		
 		scene = [[StylizeScene alloc] init];
 		[[Director sharedDirector] addSceneWithKey:SCENEKEY_STYLIZE scene:scene];
+		[scene release];
+		
+		scene = [[SideScrollerScene alloc] init];
+		[[Director sharedDirector] addSceneWithKey:GAMEKEY_ESCAPE scene:scene];
 		[scene release];
 		
 		scene = [[JumpScrollerScene alloc] init];
@@ -65,6 +81,9 @@
 		// Set the initial game state
 		[[Director sharedDirector] setCurrentSceneToSceneWithKey:SCENEKEY_MENU];
 		[[[Director sharedDirector] currentScene] setSceneState:SceneState_TransitionIn];
+		
+		[[SettingManager sharedSettingManager] loadPreviousGameFile];
+		
 	}
 	return self;
 }
@@ -81,6 +100,7 @@
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	
+	
 	// Rotate the entire view 90 degrees to the left to handle the phone being in landscape mode
 	if(!PORTRATE_MODE) {
 		glRotatef(-90.0f, 0, 0, 1);
@@ -91,8 +111,6 @@
 		// dimensions.  The far clipping plane is set to -1 and the near to 1.  The height and width have
 		// been swapped to handle the phone being in landscape mode
 		glOrthof(0, screenBounds.size.height, 0, screenBounds.size.width, -1, 1);
-		//glOrthof( -screenBounds.size.width / 2, screenBounds.size.width / 2, -screenBounds.size.height / 2, screenBounds.size.height / 2, -1, 1 );
-		
 	} else {
 		glOrthof(0, screenBounds.size.width, 0, screenBounds.size.height, -1, 1);
 	}
@@ -102,6 +120,7 @@
 	// Switch to GL_MODELVIEW so we can now draw our objects
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+	
 	// Setup how textures should be rendered i.e. how a texture with alpha should be rendered ontop of
 	// another texture.
 	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_BLEND_SRC);
@@ -112,8 +131,6 @@
 	glDisable(GL_DEPTH_TEST);
 	
 	// Set the colour to use when clearing the screen with glClear
-	
-	//glClearColor([Director sharedDirector].globalBackgroundColor.red,[Director sharedDirector].globalBackgroundColor.blue,[Director sharedDirector].globalBackgroundColor.green, [Director sharedDirector].globalBackgroundColor.alpha);
 	glClearColor(0.02,0.02,0.02, [Director sharedDirector].globalBackgroundColor.alpha);
 	
 	// Mark OGL as initialised
@@ -132,9 +149,7 @@
 		// one OGL unit by defining the horizontal and vertical clipping planes to be from 0 to the views
 		// dimensions.  The far clipping plane is set to -1 and the near to 1.  The height and width have
 		// been swapped to handle the phone being in landscape mode
-		//glOrthof(0, screenBounds.size.height, 0, screenBounds.size.width, -1, 1);
-		//glViewport(0, 0, 320, 480);
-		glOrthof(-1.0f, 1.0f, -1.5f, 1.5f, -1.0f, 1.0f);
+		glOrthof(0, screenBounds.size.height, 0, screenBounds.size.width, -1, 1);
 	} 
 	else 
 	{
@@ -150,9 +165,13 @@
 	if([[Director sharedDirector] screenMode] != screenMode)
 	{
 		screenMode = [[Director sharedDirector] screenMode];
+		//[self updateScreenMode];
 	}
+	//[backgroundScene updateWithDelta:aDelta];
+	
 	// Update the games logic based for the current scene
 	[[[Director sharedDirector] currentScene] updateWithDelta:aDelta];
+
 }
 
 
@@ -162,8 +181,8 @@
 - (void)renderScene 
 {
 	glViewport(0, 0, 320 , 480);
-	//glClear(GL_COLOR_BUFFER_BIT);
-
+	glClear(GL_COLOR_BUFFER_BIT);
+	
 	[backgroundScene render];
 	
 	if([[[Director sharedDirector] backgroundSpinner] isHidden])
@@ -179,6 +198,7 @@
 
 - (void)touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event view:(UIView*)aView {
 	[[[Director sharedDirector] currentScene] updateWithTouchLocationMoved:touches withEvent:event view:aView];
+
 }
 
 - (void)touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event view:(UIView*)aView 

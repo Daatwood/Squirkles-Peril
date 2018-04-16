@@ -3,7 +3,7 @@
 //  Squirkle's Peril
 //
 //  Created by Dustin Atwood on 2/8/11.
-//  Copyright 2011 Litlapps. All rights reserved.
+//  Copyright 2011 Dustin Atwood. All rights reserved.
 //
 
 // Large Indicator with an extremely high number limit.

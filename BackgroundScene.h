@@ -3,7 +3,7 @@
 //  Squirkle's Peril
 //
 //  Created by Dustin Atwood on 1/29/11.
-//  Copyright 2011 Litlapps. All rights reserved.
+//  Copyright 2011 Dustin Atwood. All rights reserved.
 //
 
 
@@ -27,10 +27,6 @@
 - (void)updateWithDelta:(GLfloat)aDelta;
 
 - (void) changeParticleColor;
-
-- (void) stopBackground;
-
-- (void) startBackground;
 
 - (void) render;
 

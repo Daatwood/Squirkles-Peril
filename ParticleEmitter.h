@@ -3,9 +3,11 @@
 #import "Common.h"
 #import "Image.h"
 
-@interface ParticleEmitter : NSObject 
-{
+@interface ParticleEmitter : NSObject {
+
+
 	Image *texture;
+
 	Vector2f sourcePosition;
 	Vector2f sourcePositionVariance;
 	GLfloat angle;
@@ -63,27 +65,6 @@
 @property(nonatomic, assign) BOOL blendAdditive;
 
 - (id)initParticleEmitterWithImageNamed:(NSString*)inTextureName
-							   position:(Vector2f)inPosition 
-				 sourcePositionVariance:(Vector2f)inSourcePositionVariance
-								  speed:(GLfloat)inSpeed
-						  speedVariance:(GLfloat)inSpeedVariance 
-					   particleLifeSpan:(GLfloat)inParticleLifeSpan
-			   particleLifespanVariance:(GLfloat)inParticleLifeSpanVariance 
-								  angle:(GLfloat)inAngle 
-						  angleVariance:(GLfloat)inAngleVariance 
-								gravity:(Vector2f)inGravity
-							 startColor:(Color4f)inStartColor 
-					 startColorVariance:(Color4f)inStartColorVariance
-							finishColor:(Color4f)inFinishColor 
-					finishColorVariance:(Color4f)inFinishColorVariance
-						   maxParticles:(GLuint)inMaxParticles 
-						   particleSize:(GLfloat)inParticleSize
-				   particleSizeVariance:(GLfloat)inParticleSizeVariance
-							   duration:(GLfloat)inDuration
-						  blendAdditive:(BOOL)inBlendAdditive;
-
-- (id)initParticleEmitterWithAtlasImageNamed:(NSString*)inTextureName
-                                   atlasName:(NSString*)inAtlasName
 							   position:(Vector2f)inPosition 
 				 sourcePositionVariance:(Vector2f)inSourcePositionVariance
 								  speed:(GLfloat)inSpeed

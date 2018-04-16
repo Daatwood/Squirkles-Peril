@@ -3,7 +3,7 @@
 //  Squirkle's Peril
 //
 //  Created by Dustin Atwood on 2/8/11.
-//  Copyright 2011 Litlapps. All rights reserved.
+//  Copyright 2011 Dustin Atwood. All rights reserved.
 //
 
 #define ValueLimit 999999999
@@ -93,10 +93,10 @@
 		CGPoint position;
 		position.x = [[Director sharedDirector] screenBounds].size.width * (screenPercentage.x / 100);// + ([imageIndicatorBackground imageWidth] / 2);
 		position.y = [[Director sharedDirector] screenBounds].size.height * (screenPercentage.y / 100);// - ([imageIndicatorBackground imageHeight] / 2);
-		[imageIndicatorBackground setPositionImage:position];
+		[imageIndicatorBackground setPosition:position];
 		
 		position.x = position.x - [imageIndicatorBackground imageWidth] / 2; //+ [imageEmblem imageWidth] / 2;
-		[imageEmblem setPositionImage:position];
+		[imageEmblem setPosition:position];
 		
 		positionText.x = position.x + [imageEmblem imageWidth] / 2;
 		positionText.y = position.y + [font getHeightForString:@"9"] * .60;
@@ -106,10 +106,10 @@
 		CGPoint position;
 		position.x = [[Director sharedDirector] screenBounds].size.width * (screenPercentage.x / 100) - [imageEmblem imageWidth] / 2;
 		position.y = [[Director sharedDirector] screenBounds].size.height * (screenPercentage.y / 100);
-		[imageIndicatorBackground setPositionImage:position];
+		[imageIndicatorBackground setPosition:position];
 		
 		position.x = position.x + [imageIndicatorBackground imageWidth] - [imageIndicatorBackground imageWidth] / 2;
-		[imageEmblem setPositionImage:position];
+		[imageEmblem setPosition:position];
 		positionText.x = [[Director sharedDirector] screenBounds].size.width * (screenPercentage.x / 100) - [imageIndicatorBackground imageWidth] / 2 - [imageEmblem imageWidth] / 3;
 		positionText.y = position.y + [font getHeightForString:@"9"] * .60;
 	}

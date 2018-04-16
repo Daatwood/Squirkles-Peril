@@ -1,9 +1,9 @@
 //
 //  NetworkManager.h
-//  BadBadMonkey
+//  Squirkle's Peril
 //
 //  Created by Dustin Atwood on 1/28/11.
-//  Copyright 2011 Litlapps. All rights reserved.
+//  Copyright 2011 Dustin Atwood. All rights reserved.
 //
 
 /*
@@ -36,8 +36,6 @@
 
 - (void) fetchNewsFeed;
 
-- (void) requestPremium;
-
-- (void) requestProduct:(NSString*)productName;
+- (void) requestProduct:(NSString*)productName productIndex:(int)productIndex;
 
 @end

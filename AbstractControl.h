@@ -40,16 +40,16 @@
 #import "SettingManager.h"
 #import "Director.h"
 #import "SoundManager.h"
-#import "BaseControl.h"
 
-@interface AbstractControl : BaseControl 
+
+@interface AbstractControl : NSObject 
 {
-	// When added to an array this will allow for identification
-	uint identifier;
-	
 	// Contains the position and size of the control
 	//The position is Percentage based.
 	CGRect boundingBox;
+	
+	// Enabled, When true will respond to touch events.
+	BOOL enabled;
 	
 	// Activated, True when the actor was succesfully touched.
 	BOOL activated;
@@ -68,9 +68,15 @@
 	
 	// Editing, Flags if the control is being editing.
 	BOOL editing;
+	
+	// reference to settings manager
+	SettingManager* sharedSettingManager;
+	
+	// reference to sound manager
+	SoundManager* sharedSoundManager;
 }
-@property (nonatomic) uint identifier;
-@property (nonatomic) BOOL activated, selected, touched, locked, editing,sticky;
+
+@property (nonatomic) BOOL enabled, activated, selected, touched, locked, editing,sticky;
 @property (nonatomic) CGRect boundingBox;
 
 // Init at Position with Width and Height
@@ -79,8 +85,6 @@
 - (void) resetStates;
 
 - (BOOL) checkBoundingBox:(CGPoint)point;
-
-- (BOOL) touchable;
 
 // touch began
 - (void) touchBeganAtPoint:(CGPoint)beginPoint;

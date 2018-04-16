@@ -1,11 +1,11 @@
 //
 //  StylizeScene.m
-//  BadBadMonkey
+//  Squirkle's Peril
 //
 //  Created by Dustin Atwood on 9/20/10.
-//  Copyright 2010 Litlapps. All rights reserved.
+//  Copyright 2010 Dustin Atwood. All rights reserved.
 //
-/*
+
 #define buttonBackX 60
 #define buttonBackY 449
 #define buttonApplyX 220
@@ -28,10 +28,6 @@
 #define indicatorCostCurrencyY 205
 #define imagePreviewPetBackgroundX 160
 #define imagePreviewPetBackgroundY 320
- */
-#define Tutorial_Button 50
-#define Tutorial_Label 51
-#define Tutorial_Image 52
 
 #import "StylizeScene.h"
 
@@ -51,165 +47,103 @@
 - (void) startLoadScene
 {
 	NSLog(@"Stylize Scene Loading...");
-
-	NSLog(@"Creating Indicators");
+	font = [[AngelCodeFont alloc] initWithFontImageNamed:FONT16 controlFile:FONT16 scale:1.0f filter:GL_LINEAR];
+	
+	coinIndicatorUser = [[Indicator alloc] initAtScreenPercentage:CGPointMake(71.5625, 96) withSize:2 
+														 currencyType:CurrencyType_Coin leftsideIcon:YES];
+	treatIndicator = [[Indicator alloc] initAtScreenPercentage:CGPointMake(89.84375, 87.8125) withSize:0 
+													 currencyType:CurrencyType_Treat leftsideIcon:NO];
 	coinIndicatorCost = [[Indicator alloc] initAtScreenPercentage:CGPointMake(50, 45.20) withSize:1 
-													 currencyType:CurrencyType_Coin leftsideIcon:YES];	
+													 currencyType:CurrencyType_Coin leftsideIcon:YES];						 
 	
-	indicatorPlayer = [[IndicatorPlayer alloc] init];
+	// Setting Up Basic buttons
+	buttonBack = [[ButtonControl alloc] initAsButtonImageNamed:@"ButtonSmall" withText:@"Back" selectionImage:NO 
+													atPosition:CGPointMake(buttonBackX, buttonBackY)];
+	[buttonBack setTarget:self andAction:@selector(loadMenu)];
+	[buttonBack setButtonColourFilterRed:1.0 green:0.0 blue:0.0 alpha:1.0];
+	buttonApply = [[ButtonControl alloc] initAsButtonImageNamed:@"ButtonSmall" withText:@"OK" selectionImage:NO
+													 atPosition:CGPointMake(276.25, 250)];
+	[buttonApply setTarget:self andAction:@selector(save)];
+	[buttonApply setButtonColourFilterRed:0.0 green:1.0 blue:0.0 alpha:1.0];
 	
-	NSLog(@"Creating Buttons");
-	ButtonControl* button;
-	
-	button = [[ButtonControl alloc] initAsAtlasButtonImageNamed:@"ButtonSmall" 
-												  withText:@"Back" 
-											  withFontName:FONT21
-										atScreenPercentage:CGPointMake(15, 93.54)];
-	[button setTarget:self andAction:@selector(loadMenuScene)];
-	[button setButtonColourFilterRed:1.0 green:0.0 blue:0.0 alpha:1.0];
-	[button setIdentifier:Button_Cancel];
-	[[super sceneControls] addObject:button];
-	[button release];
-	
-	button = [[ButtonControl alloc] initAsAtlasButtonImageNamed:@"ButtonSmall" 
-												  withText:@"OK" 
-											  withFontName:FONT21
-										atScreenPercentage:CGPointMake(86, 52)];
-	[button setTarget:self andAction:@selector(save)];
-	[button setButtonColourFilterRed:0.0 green:1.0 blue:0.0 alpha:1.0];
-	[button setIdentifier:Button_Action];
-	[[super sceneControls] addObject:button];
-	[button release];
-
 	// Setting Up Icon Buttons
 	// Top Left Icon
-	
-	button = [[ButtonControl alloc] initAsAtlasButtonImageNamed:@"ButtonSmall" 
+	buttonIcons = [[NSMutableArray alloc] initWithCapacity:1];
+	ButtonControl* buttonIcon;
+	buttonIcon = [[ButtonControl alloc] initAsButtonImageNamed:@"ButtonSmall" 
 															 withText:@"" 
-			  withFontName:FONT21
-												   atScreenPercentage:CGPointMake(20, 23)];
-	[button setTarget:self andAction:@selector(setFeatureToTopLeftIcon)];
-    [button setButtonColourFilterRed:0.5 green:0.5 blue:1.0 alpha:1.0];
-	[button setIdentifier:1];
-	[[super sceneControls] addObject:button];
-	[button release];
+												   atScreenPercentage:CGPointMake(20, 23) 
+															isRotated:NO];
+	[buttonIcon setTarget:self andAction:@selector(setFeatureToTopLeftIcon)];
+	[buttonIcons addObject:buttonIcon];
+	[buttonIcon release];
 	
 	// Top Mid Icon
-	button = [[ButtonControl alloc] initAsAtlasButtonImageNamed:@"ButtonSmall" 
-												  withText:@"" 
-											  withFontName:FONT21
-										atScreenPercentage:CGPointMake(50, 23)];
-	[button setTarget:self andAction:@selector(setFeatureToTopMidIcon)];
-	[button setButtonColourFilterRed:0.5 green:0.5 blue:1.0 alpha:1.0];
-    [button setIdentifier:2];
-	[[super sceneControls] addObject:button];
-	[button release];
+	buttonIcon = [[ButtonControl alloc] initAsButtonImageNamed:@"ButtonSmall" 
+															 withText:@"" 
+												   atScreenPercentage:CGPointMake(50, 23) 
+															isRotated:NO];
+	[buttonIcon setTarget:self andAction:@selector(setFeatureToTopMidIcon)];
+	[buttonIcons addObject:buttonIcon];
+	[buttonIcon release];
 	// Top Right Icon
-	button = [[ButtonControl alloc] initAsAtlasButtonImageNamed:@"ButtonSmall" 
+	buttonIcon = [[ButtonControl alloc] initAsButtonImageNamed:@"ButtonSmall" 
 															 withText:@"" 
-			  withFontName:FONT21
-												   atScreenPercentage:CGPointMake(80, 23)];
-	[button setTarget:self andAction:@selector(setFeatureToTopRightIcon)];
-	[button setButtonColourFilterRed:0.5 green:0.5 blue:1.0 alpha:1.0];
-    [button setIdentifier:3];
-	[[super sceneControls] addObject:button];
-	[button release];
+												   atScreenPercentage:CGPointMake(80, 23) 
+															isRotated:NO];
+	[buttonIcon setTarget:self andAction:@selector(setFeatureToTopRightIcon)];
+	[buttonIcons addObject:buttonIcon];
+	[buttonIcon release];
 	// Bottom Left Icon
-	button = [[ButtonControl alloc] initAsAtlasButtonImageNamed:@"ButtonSmall" 
+	buttonIcon = [[ButtonControl alloc] initAsButtonImageNamed:@"ButtonSmall" 
 															 withText:@"" 
-			  withFontName:FONT21
-												   atScreenPercentage:CGPointMake(20, 8)];
-	[button setTarget:self andAction:@selector(setFeatureToBottomLeftIcon)];
-	[button setButtonColourFilterRed:0.5 green:0.5 blue:1.0 alpha:1.0];
-    [button setIdentifier:4];
-	[[super sceneControls] addObject:button];
-	[button release];
+												   atScreenPercentage:CGPointMake(20, 8) 
+															isRotated:NO];
+	[buttonIcon setTarget:self andAction:@selector(setFeatureToBottomLeftIcon)];
+	[buttonIcons addObject:buttonIcon];
+	[buttonIcon release];
 	// Bottom Mid Icon
-	button = [[ButtonControl alloc] initAsAtlasButtonImageNamed:@"ButtonSmall" 
+	buttonIcon = [[ButtonControl alloc] initAsButtonImageNamed:@"ButtonSmall" 
 															withText:@"" 
-			  withFontName:FONT21
-												  atScreenPercentage:CGPointMake(50, 8)];
-	[button setTarget:self andAction:@selector(setFeatureToBottomMidIcon)];
-	[button setButtonColourFilterRed:0.5 green:0.5 blue:1.0 alpha:1.0];
-    [button setIdentifier:5];
-	[[super sceneControls] addObject:button];
-	[button release];
+												  atScreenPercentage:CGPointMake(50, 8) 
+														   isRotated:NO];
+	[buttonIcon setTarget:self andAction:@selector(setFeatureToBottomMidIcon)];
+	[buttonIcons addObject:buttonIcon];
+	[buttonIcon release];
 	// Bottom Right Icon
-	button = [[ButtonControl alloc] initAsAtlasButtonImageNamed:@"ButtonSmall" 
+	buttonIcon = [[ButtonControl alloc] initAsButtonImageNamed:@"ButtonSmall" 
 															  withText:@"Done" 
-			  withFontName:FONT21
-													atScreenPercentage:CGPointMake(80, 8)];
-	[button setTarget:self andAction:@selector(showFeatureTypeTab)];
-	[button setButtonColourFilterRed:0.5 green:0.5 blue:1.0 alpha:1.0];
-    [button setIdentifier:6];
-	[button setButtonColourFilterRed:1.0 green:0.0 blue:0.0 alpha:1.0];
-	[[super sceneControls] addObject:button];
-	[button release];
+													atScreenPercentage:CGPointMake(80, 8) 
+															 isRotated:NO];
+	[buttonIcon setTarget:self andAction:@selector(showFeatureTypeTab)];
+	[buttonIcon setButtonColourFilterRed:1.0 green:0.0 blue:0.0 alpha:1.0];
+	[buttonIcons addObject:buttonIcon];
+	[buttonIcon release];
 	
 	// Setting up Large Buttons
-    
-    button = [[ButtonControl alloc] initAsAtlasButtonImageNamed:@"ButtonNormal" 
-                                              withText:@""
-                                          withFontName:FONT21 
-                                    atScreenPercentage:CGPointMake(26.1, 27.08)];
-	[button setIdentifier:11];
-	[[super sceneControls] addObject:button];
-	[button release];
-	
-	button = [[ButtonControl alloc] initAsAtlasButtonImageNamed:@"ButtonNormal"  
-												  withText:@"" 
-                                              withFontName:FONT21
-										atScreenPercentage:CGPointMake(26.1, 16.7)];
-	[button setIdentifier:22];
-	[[super sceneControls] addObject:button];
-	[button release];
-	
-	button = [[ButtonControl alloc] initAsAtlasButtonImageNamed:@"ButtonNormal"  
-												  withText:@"" 
-                                                   withFontName:FONT21
-										atScreenPercentage:CGPointMake(26.1, 6.25)];
-	[button setIdentifier:33];
-	[[super sceneControls] addObject:button];
-	[button release];
-	
-	button = [[ButtonControl alloc] initAsAtlasButtonImageNamed:@"ButtonNormal"  
-												  withText:@"" 
-                                                   withFontName:FONT21
-										atScreenPercentage:CGPointMake(73.75, 27.08)];
-	[button setIdentifier:44];
-	[[super sceneControls] addObject:button];
-	[button release];
-	
-	button = [[ButtonControl alloc] initAsAtlasButtonImageNamed:@"ButtonNormal"  
-												  withText:@"" 
-                                              withFontName:FONT21
-										atScreenPercentage:CGPointMake(73.75, 16.7)];
-	[button setIdentifier:55];
-	[[super sceneControls] addObject:button];
-	[button release];
-	
-	button = [[ButtonControl alloc] initAsAtlasButtonImageNamed:@"ButtonNormal"  
-												  withText:@"" 
-                                                   withFontName:FONT21
-										atScreenPercentage:CGPointMake(73.75, 6.25)];
-	[button setIdentifier:66];
-	[[super sceneControls] addObject:button];
-	[button release];
-	
-	
-	 // Setting up Tabs
+	buttonTopLeft = [[ButtonControl alloc] initAsButtonImageNamed:@"ButtonExtended"  withText:@"" selectionImage:NO 
+														atPosition:CGPointMake(83.5, 130)];
+	buttonMidLeft = [[ButtonControl alloc] initAsButtonImageNamed:@"ButtonExtended"  withText:@"" selectionImage:NO 
+														atPosition:CGPointMake(83.5, 80)];
+	buttonBottomLeft = [[ButtonControl alloc] initAsButtonImageNamed:@"ButtonExtended"  withText:@"" selectionImage:NO 
+														atPosition:CGPointMake(83.5, 30)];
+	buttonTopRight = [[ButtonControl alloc] initAsButtonImageNamed:@"ButtonExtended"  withText:@"" selectionImage:NO 
+														   atPosition:CGPointMake(236, 130)];
+	buttonMidRight = [[ButtonControl alloc] initAsButtonImageNamed:@"ButtonExtended"  withText:@"" selectionImage:NO 
+														   atPosition:CGPointMake(236, 80)];
+	buttonBottomRight = [[ButtonControl alloc] initAsButtonImageNamed:@"ButtonExtended" withText:@"" selectionImage:NO
+														   atPosition:CGPointMake(236, 30)];
+	// Setting up Tabs
 	buttonTabOne = [[AbstractControl alloc] initWithCGRect:CGRectMake(80, 175, 160, 34)];
 	[buttonTabOne setSticky:YES];
 	[buttonTabOne setLocked:YES];
-	imageTabOne = [[ResourceManager sharedResourceManager] getImageWithImageNamed:@"InterfaceTabOne" 
-																 withinAtlasNamed:@"InterfaceAtlas"];
-	[imageTabOne setPositionImage:CGPointMake(160, 97)];
+	imageTabOne = [[Image alloc] initWithImageNamed:@"imageStylizeTab1"];
+	[imageTabOne setPosition:CGPointMake(160, 97)];
 	buttonTabTwo = [[AbstractControl alloc] initWithCGRect:CGRectMake(240, 175, 160, 34)];
 	[buttonTabTwo setSticky:YES];
 	[buttonTabTwo setLocked:YES];
-	imageTabTwo = [[ResourceManager sharedResourceManager] getImageWithImageNamed:@"InterfaceTabTwo" 
-																 withinAtlasNamed:@"InterfaceAtlas"];
-	[imageTabTwo setPositionImage:CGPointMake(160, 97)];
+	imageTabTwo = [[Image alloc] initWithImageNamed:@"imageStylizeTab2"];
+	[imageTabTwo setPosition:CGPointMake(160, 97)];
 	
 	sliderRedColor = [[SliderControl alloc] initAtPosition:CGPointMake(184.5, 88)];
 	[sliderRedColor setTarget:self andAction:@selector(setColorToCustom)];
@@ -226,8 +160,10 @@
 	labelBlueSlider = [[LabelControl alloc] initWithFontName:FONT16];
 	[labelBlueSlider setText:@"Blue" atSceenPercentage:CGPointMake(10, 3.54)];
 	
-	imageBackgroundPet = [[ResourceManager sharedResourceManager] getImageWithImageNamed:@"InterfacePortrait" withinAtlasNamed:@"InterfaceAtlas"];
-	[imageBackgroundPet setPositionAtScreenPrecentage:CGPointMake(50, 66.7)];
+	imagePreviewPetBackground = [[Image alloc] initWithImageNamed:@"imageBackgroundPet"];
+	[imagePreviewPetBackground setPosition:CGPointMake(imagePreviewPetBackgroundX, imagePreviewPetBackgroundY)];
+	imageBackground = [[Image alloc] initWithImageNamed:@"imageBackground"];
+	[imageBackground setPosition:CGPointMake(160, 240)];
 	
 	labelFeatures = [[LabelControl alloc] initWithFontName:FONT21];
 	[labelFeatures setText:@"Features" atSceenPercentage:CGPointMake(29, 37)];
@@ -235,26 +171,24 @@
 	[labelColor setText:@"Color" atSceenPercentage:CGPointMake(71, 37)];
 	
 	// Gets all items for the pet slots.
-	allItems = [[NSArray alloc] initWithObjects: 
-				[sharedSettingManager getItemsInBin:ItemBin_All ofType:ItemKey_Character],
-				[sharedSettingManager getItemsInBin:ItemBin_All ofType:ItemKey_Antenna],
-				[sharedSettingManager getItemsInBin:ItemBin_All ofType:ItemKey_Eyes],
+	allItems = [[NSArray alloc] initWithObjects:
+				[sharedSettingManager getItemsInBin:ItemBin_All ofType:ItemType_Topper],
+				[sharedSettingManager getItemsInBin:ItemBin_All ofType:ItemType_Eyes],
+				[sharedSettingManager getItemsInBin:ItemBin_All ofType:ItemType_Body_Pattern],
+				[sharedSettingManager getItemsInBin:ItemBin_All ofType:ItemType_Body_Type],
 				nil];
 	
 	previewItems = [[NSMutableArray alloc] initWithObjects:
-					[[allItems objectAtIndex:0] objectAtIndex:0],
-					[[allItems objectAtIndex:1] objectAtIndex:0],
-					[[allItems objectAtIndex:2] objectAtIndex:0],
+					[[allItems objectAtIndex:ItemType_Topper] objectAtIndex:0],
+					[[allItems objectAtIndex:ItemType_Eyes] objectAtIndex:0],
 					nil];
 	
 	selectedCategoryIndex = 0;
 	selectedItemIndex = 0;
 	
-	previewPet = [[PetActor alloc] init];
+	previewPet = [[PetActor alloc] initWithState:0];
 	
-    CGRect boundingBox = [previewPet boundingBox];
-    boundingBox.origin.y += 40;
-    [previewPet setBoundingBox:boundingBox];
+	[previewPet adjustScale:0.5f];
 	
 	[self finishLoadScene];
 }
@@ -277,63 +211,31 @@
 		[NSTimer scheduledTimerWithTimeInterval:0.1f target:self selector:@selector(startLoadScene) userInfo:nil repeats:NO];
 		//[self performSelectorOnMainThread:@selector(startLoadScene) withObject:nil waitUntilDone:NO];
 	}
-	else
-	{
-		[indicatorPlayer refresh];
-		colorString = [[NSString stringWithString:[sharedSettingManager for:FileType_Character get:ProfileKey_Color]] retain];
-		
-		// Parts are now defined in an array....
-        
-        // Character Type
-        [previewItems replaceObjectAtIndex:ItemKey_Character withObject:
-		 [[SettingManager sharedSettingManager] for:FileType_Character get:ProfileKey_Part1]];
-        // Checking to make sure the Part1 is a valid Atlas.
-        if ([[previewItems objectAtIndex:0] isEqualToString:@"1000"])
-            [previewItems replaceObjectAtIndex:ItemKey_Character withObject:@"Squirkle"];
-        
-        // Antenna Type
-        [previewItems replaceObjectAtIndex:ItemKey_Antenna withObject:
-		 [[SettingManager sharedSettingManager] for:FileType_Character get:ProfileKey_Part2]];
-        // Checking to make sure the Part2 is a valid part.
-        if ([[previewItems objectAtIndex:1] isEqualToString:@"1002"])
-            [previewItems replaceObjectAtIndex:ItemKey_Antenna withObject:@"Antenna1"];
-        
-        // Eyes Type
-		[previewItems replaceObjectAtIndex:ItemKey_Eyes withObject:
-		 [[SettingManager sharedSettingManager] for:FileType_Character get:ProfileKey_Part3]];
-        // Checking to make sure the Part3 is a valid part.
-        if ([[previewItems objectAtIndex:2] isEqualToString:@"1005"])
-            [previewItems replaceObjectAtIndex:ItemKey_Eyes withObject:@"Eyes3"];
-		
-		[imageTabOne setColourWithString:colorString];
-		[imageTabTwo setColourWithString:colorString];
-		
-		[previewPet setColorCharacter:colorString];
-		[previewPet loadPart:ProfileKey_Part1 withUID:[previewItems objectAtIndex:0] characterUID:[previewItems objectAtIndex:0]];
-		[previewPet loadPart:ProfileKey_Part2 withUID:[previewItems objectAtIndex:1] characterUID:[previewItems objectAtIndex:0]];
-		[previewPet loadPart:ProfileKey_Part3 withUID:[previewItems objectAtIndex:2] characterUID:[previewItems objectAtIndex:0]];
-		
-		[coinIndicatorCost changeInitialValue:0];
-		[self showFeatureTypeTab];
-        
-        [previewPet setRenderPet:TRUE];
-	}
-} 
+	[coinIndicatorUser changeInitialValue:[[sharedSettingManager forProfileGet:ProfileKey_Coins]intValue]];
+	[treatIndicator changeInitialValue:[[sharedSettingManager forProfileGet:ProfileKey_Treats]intValue]];
+	
+	colorString = [[NSString stringWithString:[sharedSettingManager forProfileGet:ProfileKey_Pet_Color]] retain];
+	[previewItems replaceObjectAtIndex:ItemType_Topper withObject:
+	 [[SettingManager sharedSettingManager] forProfileGet:Profilekey_Pet_Antenna]];
+	[previewItems replaceObjectAtIndex:ItemType_Eyes withObject:
+	 [[SettingManager sharedSettingManager] forProfileGet:ProfileKey_Pet_Eyes]];
+	
+	[previewPet adjustImagesWithUID:previewItems andColor:colorString];
+	[coinIndicatorCost changeInitialValue:0];
+	[self showFeatureTypeTab];
+}
 
 // Attempts to purchase all previewed Items and the saves them as equipped
 - (void) save
 {
-    [[SettingManager sharedSettingManager] for:FileType_Character set:ProfileKey_Cost to:@"0"]; 
-    
-    [sharedSettingManager for:FileType_Character set:ProfileKey_Color to:colorString];
-    [sharedSettingManager for:FileType_Character set:ProfileKey_Part1 to:[previewItems objectAtIndex:0]];
-    [sharedSettingManager for:FileType_Character set:ProfileKey_Part2 to:[previewItems objectAtIndex:1]];
-    [sharedSettingManager for:FileType_Character set:ProfileKey_Part3 to:[previewItems objectAtIndex:2]];
-    [coinIndicatorCost changeInitialValue:0];
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"PLAYER_COLOR_CHANGE" object:nil];
-    
-    [self loadMenuScene];
+	if([[SettingManager sharedSettingManager] modifyCoinsBy:-[coinIndicatorCost returnTotalPoints]])
+	{
+		[sharedSettingManager forProfileSet:Profilekey_Pet_Antenna to:[previewItems objectAtIndex:ItemType_Topper]];
+		[sharedSettingManager forProfileSet:ProfileKey_Pet_Eyes to:[previewItems objectAtIndex:ItemType_Eyes]];
+		[sharedSettingManager forProfileSet:ProfileKey_Pet_Color to:colorString];
+		[coinIndicatorCost changeInitialValue:0];
+		[self loadMenu];
+	}
 }
 
 //
@@ -342,162 +244,152 @@
 // Show Feature Type Tab
 - (void) showFeatureTypeTab
 {
-	[[labelFeatures font] setColourFilterRed:1.0f green:1.0f blue:1.0f alpha:1.0f];
-	[[labelColor font] setColourFilterRed:0.5f green:0.5f blue:0.5f alpha:1.0f];
-	
-	// By Default Disable All buttons then renabled as needed
-	for (ButtonControl* button in [super sceneControls]) 
-	{
-		[button setVisible:FALSE];
-	}
-	
-    [[super control:Button_Cancel] setVisible:TRUE];
-	
-    [[super control:Button_Action] setVisible:TRUE];
-	
 	// Show 1st Tab
 	[buttonTabOne setSelected:TRUE];
+	//[buttonTabOne setEnabled:TRUE];
 	[buttonTabTwo setSelected:FALSE];
-	
+	//[buttonTabTwo setEnabled:FALSE];
+	// Hide all Icon Buttons
+	for (ButtonControl* iconButton in buttonIcons) 
+	{
+		[iconButton setEnabled:FALSE];
+	}
+
 	// Hide Color Picker
-	[sliderRedColor setVisible:FALSE];
-	[labelRedSlider setVisible:FALSE];
-	[sliderGreenColor setVisible:FALSE];
-	[labelGreenSlider setVisible:FALSE];
-	[sliderBlueColor setVisible:FALSE];
-	[labelBlueSlider setVisible:FALSE];
-	
+	[sliderRedColor setEnabled:FALSE];
+	[labelRedSlider setEnabled:FALSE];
+	[sliderGreenColor setEnabled:FALSE];
+	[labelGreenSlider setEnabled:FALSE];
+	[sliderBlueColor setEnabled:FALSE];
+	[labelBlueSlider setEnabled:FALSE];
 	// Adjust Large Buttons
-	[[super control:11] setText:@"Body Type"];
-	[[super control:11] setTarget:self andAction:@selector(setVisibleFeatureBodyType)];
-	[[super control:11] setButtonColourFilterRed:0.5 green:0.5 blue:1.0 alpha:1.0];
-	
-	[[super control:33] setText:@"Antenna"];
-	[[super control:33] setTarget:self andAction:@selector(setVisibleFeatureAntenna)];
-    [[super control:33] setButtonColourFilterRed:0.5 green:0.5 blue:1.0 alpha:1.0];
-	
-	//[[super control:44] setText:@"Body Type"];
-	//[[super control:44] setTarget:self andAction:@selector(setVisibleFeatureBodyType)];
-	//[[super control:44] setButtonColourFilterRed:0.5 green:0.5 blue:1.0 alpha:1.0];
-    
-    [[super control:66] setText:@"Eyes"];
-	[[super control:66] setTarget:self andAction:@selector(setVisibleFeatureEyes)];
-	[[super control:66] setButtonColourFilterRed:0.5 green:0.5 blue:1.0 alpha:1.0];
+	[buttonTopLeft setEnabled:TRUE];
+	[buttonTopLeft setText:@"Antenna"];
+	[buttonTopLeft setTarget:self andAction:@selector(setVisibleFeatureAntenna)];
+	[buttonTopLeft setButtonColourFilterRed:1.0 green:0.8 blue:0.2 alpha:1.0];
+	[buttonMidLeft setEnabled:FALSE];
+	[buttonBottomLeft setEnabled:TRUE];
+	[buttonBottomLeft setText:@"Body Type"];
+	[buttonBottomLeft setTarget:self andAction:@selector(setVisibleFeatureBodyType)];
+	[buttonBottomLeft setButtonColourFilterRed:1.0 green:0.8 blue:0.2 alpha:1.0];
+	[buttonTopRight setEnabled:TRUE];
+	[buttonTopRight setText:@"Eyes"];
+	[buttonTopRight setTarget:self andAction:@selector(setVisibleFeatureEyes)];
+	[buttonTopRight setButtonColourFilterRed:1.0 green:0.8 blue:0.2 alpha:1.0];
+	[buttonMidRight setEnabled:FALSE];
+	[buttonBottomRight setEnabled:TRUE];
+	[buttonBottomRight setText:@"Pattern"];
+	[buttonBottomRight setTarget:self andAction:@selector(setVisibleFeaturePattern)];
+	[buttonBottomRight setButtonColourFilterRed:1.0 green:0.8 blue:0.2 alpha:1.0];
 }
 // Show Feature Picker Tab
 - (void) showFeaturePickerTab
 {
-	[[labelFeatures font] setColourFilterRed:1.0f green:1.0f blue:1.0f alpha:1.0f];
-	[[labelColor font] setColourFilterRed:0.5f green:0.5f blue:0.5f alpha:1.0f];
-	
 	// Show 1st Tab
 	[buttonTabOne setSelected:TRUE];
+	//[buttonTabOne setEnabled:TRUE];
 	[buttonTabTwo setSelected:FALSE];
-	
-	// By Default Disable All buttons then renabled as needed
-	for (ButtonControl* button in [super sceneControls]) 
+	//[buttonTabTwo setEnabled:FALSE];
+	// Hide all Icon Buttons
+	for (ButtonControl* iconButton in buttonIcons) 
 	{
-		[button setVisible:FALSE];
+		[iconButton setEnabled:FALSE];
 	}
-	
-    [[super control:Button_Cancel] setVisible:TRUE];
-	
-	[[super control:6] setVisible:TRUE];
-	
+	[[buttonIcons objectAtIndex:5] setEnabled:TRUE];
 	// Hide Color Picker
-	[sliderRedColor setVisible:FALSE];
-	[labelRedSlider setVisible:FALSE];
-	[sliderGreenColor setVisible:FALSE];
-	[labelGreenSlider setVisible:FALSE];
-	[sliderBlueColor setVisible:FALSE];
-	[labelBlueSlider setVisible:FALSE];
+	[sliderRedColor setEnabled:FALSE];
+	[labelRedSlider setEnabled:FALSE];
+	[sliderGreenColor setEnabled:FALSE];
+	[labelGreenSlider setEnabled:FALSE];
+	[sliderBlueColor setEnabled:FALSE];
+	[labelBlueSlider setEnabled:FALSE];
+	// Adjust Large Buttons
+	[buttonTopLeft setEnabled:FALSE];
+	[buttonMidLeft setEnabled:FALSE];
+	[buttonBottomLeft setEnabled:FALSE];
+	[buttonTopRight setEnabled:FALSE];
+	[buttonMidRight setEnabled:FALSE];
+	[buttonBottomRight setEnabled:FALSE];
 }
 // Show Color Tab
 - (void) showColorTab
 {
-	[[labelColor font] setColourFilterRed:1.0f green:1.0f blue:1.0f alpha:1.0f];
-	[[labelFeatures font] setColourFilterRed:0.5f green:0.5f blue:0.5f alpha:1.0f];
-	
 	// Show 1st Tab
 	[buttonTabOne setSelected:FALSE];
+	//[buttonTabOne setEnabled:FALSE];
 	[buttonTabTwo setSelected:TRUE];
-	
-	// By Default Disable All buttons then renabled as needed
-	for (ButtonControl* button in [super sceneControls]) 
+	//[buttonTabTwo setEnabled:TRUE];
+	// Hide all Icon Buttons
+	for (ButtonControl* iconButton in buttonIcons) 
 	{
-		[button setVisible:FALSE];
+		[iconButton setEnabled:FALSE];
 	}
-	
-    [[super control:Button_Cancel] setVisible:TRUE];
-	
-    [[super control:Button_Action] setVisible:TRUE];
-	
 	// Hide Color Picker
-	[sliderRedColor setVisible:FALSE];
-	[labelRedSlider setVisible:FALSE];
-	[sliderGreenColor setVisible:FALSE];
-	[labelGreenSlider setVisible:FALSE];
-	[sliderBlueColor setVisible:FALSE];
-	[labelBlueSlider setVisible:FALSE];
-	
+	[sliderRedColor setEnabled:FALSE];
+	[labelRedSlider setEnabled:FALSE];
+	[sliderGreenColor setEnabled:FALSE];
+	[labelGreenSlider setEnabled:FALSE];
+	[sliderBlueColor setEnabled:FALSE];
+	[labelBlueSlider setEnabled:FALSE];
 	// Adjust Large Buttons
-	[[super control:11] setText:@"Red"];
-	[[super control:11] setTarget:self andAction:@selector(setColorToRed)];
-	[[super control:11] setButtonColourFilterRed:1.0 green:0.0 blue:0.0 alpha:1.0];
-	
-	[[super control:22] setText:@"Blue"];
-	[[super control:22] setTarget:self andAction:@selector(setColorToBlue)];
-	[[super control:22] setButtonColourFilterRed:0.0 green:0.68 blue:0.94 alpha:1.0];
-	
-	[[super control:33] setText:@"Yellow"];
-	[[super control:33] setTarget:self andAction:@selector(setColorToYellow)];
-	[[super control:33] setButtonColourFilterRed:1.0 green:0.95 blue:0.0 alpha:1.0];
-	
-	[[super control:44] setText:@"Purple"];
-	[[super control:44] setTarget:self andAction:@selector(setColorToPurple)];
-	[[super control:44] setButtonColourFilterRed:0.93 green:0.16 blue:0.48 alpha:1.0];
-	
-	[[super control:55] setText:@"Green"];
-	[[super control:55] setTarget:self andAction:@selector(setColorToGreen)];
-	[[super control:55] setButtonColourFilterRed:0.0 green:0.65 blue:0.32 alpha:1.0];
-	
-	[[super control:66] setText:@"Custom"];
-	[[super control:66] setTarget:self andAction:@selector(showCustomColorTab)];
-	[[super control:66] setButtonColourWithString:colorString];
+	[buttonTopLeft setEnabled:TRUE];
+	[buttonTopLeft setText:@"Red"];
+	[buttonTopLeft setTarget:self andAction:@selector(setColorToRed)];
+	[buttonTopLeft setButtonColourFilterRed:1.0 green:0.0 blue:0.0 alpha:1.0];
+	[buttonMidLeft setEnabled:FALSE];
+	[buttonMidLeft setText:@"Blue"];
+	[buttonMidLeft setTarget:self andAction:@selector(setColorToBlue)];
+	[buttonMidLeft setButtonColourFilterRed:0.0 green:0.68 blue:0.94 alpha:1.0];
+	[buttonBottomLeft setEnabled:TRUE];
+	[buttonBottomLeft setText:@"Yellow"];
+	[buttonBottomLeft setTarget:self andAction:@selector(setColorToYellow)];
+	[buttonBottomLeft setButtonColourFilterRed:1.0 green:0.95 blue:0.0 alpha:1.0];
+	[buttonTopRight setEnabled:TRUE];
+	[buttonTopRight setText:@"Purple"];
+	[buttonTopRight setTarget:self andAction:@selector(setColorToPurple)];
+	[buttonTopRight setButtonColourFilterRed:0.93 green:0.16 blue:0.48 alpha:1.0];
+	[buttonMidRight setEnabled:FALSE];
+	[buttonMidRight setText:@"Green"];
+	[buttonMidRight setTarget:self andAction:@selector(setColorToGreen)];
+	[buttonMidRight setButtonColourFilterRed:0.0 green:0.65 blue:0.32 alpha:1.0];
+	[buttonBottomRight setEnabled:TRUE];
+	[buttonBottomRight setText:@"Custom"];
+	[buttonBottomRight setTarget:self andAction:@selector(showCustomColorTab)];
+	[buttonBottomRight setButtonColourWithString:colorString];
 }
 // Show Custom Color Tab
 - (void) showCustomColorTab
 {
-	[[labelColor font] setColourFilterRed:1.0f green:1.0f blue:1.0f alpha:1.0f];
-	[[labelFeatures font] setColourFilterRed:0.5f green:0.5f blue:0.5f alpha:1.0f];
-	
 	// Show 1st Tab
 	[buttonTabOne setSelected:FALSE];
+	//[buttonTabOne setEnabled:FALSE];
 	[buttonTabTwo setSelected:TRUE];
-
-	// By Default Disable All buttons then renabled as needed
-	for (ButtonControl* button in [super sceneControls]) 
+	//[buttonTabTwo setEnabled:TRUE];
+	// Hide all Icon Buttons
+	for (ButtonControl* iconButton in buttonIcons) 
 	{
-		[button setVisible:FALSE];
+		[iconButton setEnabled:FALSE];
 	}
-	
-    [[super control:Button_Cancel] setVisible:TRUE];
-	
-    [[super control:Button_Action] setVisible:TRUE];
 
 	// Show Color Picker
-	[sliderRedColor setVisible:TRUE];
-	[labelRedSlider setVisible:TRUE];
-	[sliderGreenColor setVisible:TRUE];
-	[labelGreenSlider setVisible:TRUE];
-	[sliderBlueColor setVisible:TRUE];
-	[labelBlueSlider setVisible:TRUE];
+	[sliderRedColor setEnabled:TRUE];
+	[labelRedSlider setEnabled:TRUE];
+	[sliderGreenColor setEnabled:TRUE];
+	[labelGreenSlider setEnabled:TRUE];
+	[sliderBlueColor setEnabled:TRUE];
+	[labelBlueSlider setEnabled:TRUE];
 	// Set the sliders to current Color
 	[self adjustSlidersToString:colorString];
 	// Hide Large Buttons
-	[[super control:11] setText:@"Done"];
-	[[super control:11] setTarget:self andAction:@selector(showColorTab)];
-	[[super control:11] setButtonColourFilterRed:1.0 green:0.0 blue:0.0 alpha:1.0];
+	[buttonTopLeft setEnabled:TRUE];
+	[buttonTopLeft setText:@"Done"];
+	[buttonTopLeft setTarget:self andAction:@selector(showColorTab)];
+	[buttonTopLeft setButtonColourFilterRed:1.0 green:0.0 blue:0.0 alpha:1.0];
+	[buttonMidLeft setEnabled:FALSE];
+	[buttonBottomLeft setEnabled:FALSE];
+	[buttonTopRight setEnabled:FALSE];
+	[buttonMidRight setEnabled:FALSE];
+	[buttonBottomRight setEnabled:FALSE];
 }
 
 //
@@ -507,35 +399,35 @@
 - (void) setColorToRed
 {
 	colorString = @"{1.0, 0.0, 0.0}";
-	[[super control:66] setButtonColourWithString:colorString];
+	[buttonBottomRight setButtonColourWithString:colorString];
 	[self updatePet];
 }
 // Set To Blue Color
 - (void) setColorToBlue
 {
 	colorString = @"{0.0, 0.68, 0.94}";
-	[[super control:66] setButtonColourWithString:colorString];
+	[buttonBottomRight setButtonColourWithString:colorString];
 	[self updatePet];
 }
 // Set To Yellow Color
 - (void) setColorToYellow
 {
 	colorString = @"{1.0, 0.95, 0.0}";
-	[[super control:66] setButtonColourWithString:colorString];
+	[buttonBottomRight setButtonColourWithString:colorString];
 	[self updatePet];
 }
 // Set To Purple Color
 - (void) setColorToPurple
 {
 	colorString = @"{0.93, 0.16, 0.48}";
-	[[super control:66] setButtonColourWithString:colorString];
+	[buttonBottomRight setButtonColourWithString:colorString];
 	[self updatePet];
 }
 // Set To Green Color
 - (void) setColorToGreen
 {
 	colorString = @"{0.0, 0.65, 0.32}";
-	[[super control:66] setButtonColourWithString:colorString];
+	[buttonBottomRight setButtonColourWithString:colorString];
 	[self updatePet];
 }
 // Set To Custom Color
@@ -552,43 +444,56 @@
 // Set Visible Feature for Selected Category
 - (void) setVisibleFeatureForSelectedCategory
 {
-    //NSLog(@"AllItems: %@", allItems);
-    
 	[self showFeaturePickerTab];
 	for (int i = 0; i < [[allItems objectAtIndex:selectedCategoryIndex] count] && i < 6; i++) 
 	{
-		[[super control:i + 1] setText:[NSString stringWithFormat:@"%D",i]];
-		[[super control:i + 1] setVisible:TRUE];
+		if([[[allItems objectAtIndex:selectedCategoryIndex] objectAtIndex:i] intValue] ==
+		   [[[SettingManager sharedSettingManager] forProfileGet:selectedCategoryIndex + 9] intValue])
+		{
+			[[buttonIcons objectAtIndex:i] setButtonColourFilterRed:0.0 green:1.0 blue:0.0 alpha:1.0];
+		}
+		else
+		{
+			[[buttonIcons objectAtIndex:i] setButtonColourFilterRed:1.0 green:1.0 blue:1.0 alpha:1.0];
+		}
+		
+		[[buttonIcons objectAtIndex:i] setText:[NSString stringWithFormat:@"%D",i]];
+		[[buttonIcons objectAtIndex:i] setEnabled:TRUE];
 	}
-}
-
-// Set Visible Feature Body Type
-- (void) setVisibleFeatureBodyType
-{
-	//[self showFeaturePickerTab];
-	selectedCategoryIndex = 0;
-	[self setVisibleFeatureForSelectedCategory];
-	
 }
 
 // Set Visible Feature Antenna
 - (void) setVisibleFeatureAntenna
 {
 	//[self showFeaturePickerTab];
-	selectedCategoryIndex = 1;
+	selectedCategoryIndex = ItemType_Topper;
 	[self setVisibleFeatureForSelectedCategory];
 	
 }
-
 // Set Visible Feature Eyes
 - (void) setVisibleFeatureEyes
 {
 	//[self showFeaturePickerTab];
-	selectedCategoryIndex = 2;
+	selectedCategoryIndex = ItemType_Eyes;
 	[self setVisibleFeatureForSelectedCategory];
 	
 }
+// Set Visible Feature Pattern
+- (void) setVisibleFeaturePattern
+{
+	//[self showFeaturePickerTab];
+	selectedCategoryIndex = ItemType_Body_Pattern;
+	[self setVisibleFeatureForSelectedCategory];
 
+}
+// Set Visible Feature Body Type
+- (void) setVisibleFeatureBodyType
+{
+	//[self showFeaturePickerTab];
+	selectedCategoryIndex = ItemType_Body_Type;
+	[self setVisibleFeatureForSelectedCategory];
+	
+}
 // Set Feature to top left icon 
 - (void) setFeatureToTopLeftIcon
 {
@@ -681,7 +586,7 @@
 }
 
 // Closes the scene and returns to stage. Does not save.
-- (void) loadMenuScene
+- (void) loadMenu
 {
 	[[Director sharedDirector] setCurrentSceneToSceneWithKey:SCENEKEY_MENU];
 }
@@ -689,23 +594,20 @@
 // Update Preview Pet
 - (void) updatePet
 {
-	[previewPet setColorCharacter:colorString];
-	[previewPet loadPart:ProfileKey_Part1 withUID:[previewItems objectAtIndex:0] characterUID:[previewItems objectAtIndex:0]];
-	[previewPet loadPart:ProfileKey_Part2 withUID:[previewItems objectAtIndex:1] characterUID:[previewItems objectAtIndex:0]];
-	[previewPet loadPart:ProfileKey_Part3 withUID:[previewItems objectAtIndex:2] characterUID:[previewItems objectAtIndex:0]];
+	[previewPet adjustImagesWithUID:previewItems andColor:colorString];
 	int cost = 0;
 	
-	if([[[SettingManager sharedSettingManager] for:FileType_Character get:ProfileKey_Part2] intValue]  != 
-		 [[previewItems objectAtIndex:1] intValue])
+	if([[[SettingManager sharedSettingManager] forProfileGet:Profilekey_Pet_Antenna] intValue]  != 
+		 [[previewItems objectAtIndex:ItemType_Topper] intValue])
 	{
 		cost += 25;
 	}
-	if([[[SettingManager sharedSettingManager] for:FileType_Character get:ProfileKey_Part3] intValue] !=
-		 [[previewItems objectAtIndex:2] intValue])
+	if([[[SettingManager sharedSettingManager] forProfileGet:ProfileKey_Pet_Eyes] intValue] !=
+		 [[previewItems objectAtIndex:ItemType_Eyes] intValue])
 	{
 		cost += 25;
 	}
-	if(![[[SettingManager sharedSettingManager] for:FileType_Character get:ProfileKey_Color] 
+	if(![[[SettingManager sharedSettingManager] forProfileGet:ProfileKey_Pet_Color] 
 		 isEqualToString:colorString])
 	{
 		cost += 25;
@@ -721,9 +623,9 @@
 			// The Scene is in the forefront and running.
 		case SceneState_Running:
 		{
-			[indicatorPlayer updateWithDelta:aDelta];
+			[coinIndicatorUser updateWithDelta:aDelta];
+			[treatIndicator updateWithDelta:aDelta];
 			[coinIndicatorCost updateWithDelta:aDelta];
-            [previewPet updateWithDelta:aDelta];
 			break;
 		}
 			// The scene is phasing out.
@@ -748,36 +650,79 @@
 {
 	[super updateWithTouchLocationBegan:touches withEvent:event view:aView];
 	
+	[buttonBack touchBeganAtPoint:[Director sharedDirector].eventArgs.startPoint];
+	[buttonApply touchBeganAtPoint:[Director sharedDirector].eventArgs.startPoint];
+	
 	[buttonTabOne touchBeganAtPoint:[Director sharedDirector].eventArgs.startPoint];
 
 	[buttonTabTwo touchBeganAtPoint:[Director sharedDirector].eventArgs.startPoint];
+	
+	for (ButtonControl* iconButton in buttonIcons) 
+	{
+		[iconButton touchBeganAtPoint:[Director sharedDirector].eventArgs.startPoint];
+	}
 
 	[sliderRedColor touchBeganAtPoint:[Director sharedDirector].eventArgs.startPoint];
 	[sliderGreenColor touchBeganAtPoint:[Director sharedDirector].eventArgs.startPoint];
 	[sliderBlueColor touchBeganAtPoint:[Director sharedDirector].eventArgs.startPoint];
+
+	[buttonTopLeft touchBeganAtPoint:[Director sharedDirector].eventArgs.startPoint];
+	[buttonMidLeft touchBeganAtPoint:[Director sharedDirector].eventArgs.startPoint];
+	[buttonBottomLeft touchBeganAtPoint:[Director sharedDirector].eventArgs.startPoint];
+	[buttonTopRight touchBeganAtPoint:[Director sharedDirector].eventArgs.startPoint];
+	[buttonMidRight touchBeganAtPoint:[Director sharedDirector].eventArgs.startPoint];
+	[buttonBottomRight touchBeganAtPoint:[Director sharedDirector].eventArgs.startPoint];
 }
 
 - (void)updateWithTouchLocationMoved:(NSSet*)touches withEvent:(UIEvent*)event view:(UIView*)aView 
 {
 	[super updateWithTouchLocationMoved:touches withEvent:event view:aView];
 	
+	[buttonBack touchMovedAtPoint:[Director sharedDirector].eventArgs.movedPoint];
+	[buttonApply touchMovedAtPoint:[Director sharedDirector].eventArgs.movedPoint];
+
 	[buttonTabOne touchMovedAtPoint:[Director sharedDirector].eventArgs.movedPoint];
 	[buttonTabTwo touchMovedAtPoint:[Director sharedDirector].eventArgs.movedPoint];
+	for (ButtonControl* iconButton in buttonIcons) 
+	{
+		[iconButton touchMovedAtPoint:[Director sharedDirector].eventArgs.movedPoint];
+	}
+	
 	[sliderRedColor touchMovedAtPoint:[Director sharedDirector].eventArgs.movedPoint];
 	[sliderGreenColor touchMovedAtPoint:[Director sharedDirector].eventArgs.movedPoint];
-	[sliderBlueColor touchMovedAtPoint:[Director sharedDirector].eventArgs.movedPoint];	
+	[sliderBlueColor touchMovedAtPoint:[Director sharedDirector].eventArgs.movedPoint];
+	
+	[buttonTopLeft touchMovedAtPoint:[Director sharedDirector].eventArgs.movedPoint];
+	[buttonMidLeft touchMovedAtPoint:[Director sharedDirector].eventArgs.movedPoint];
+	[buttonBottomLeft touchMovedAtPoint:[Director sharedDirector].eventArgs.movedPoint];
+	[buttonTopRight touchMovedAtPoint:[Director sharedDirector].eventArgs.movedPoint];
+	[buttonMidRight touchMovedAtPoint:[Director sharedDirector].eventArgs.movedPoint];
+	[buttonBottomRight touchMovedAtPoint:[Director sharedDirector].eventArgs.movedPoint];	
 }
 
-- (BOOL)updateWithTouchLocationEnded:(NSSet*)touches withEvent:(UIEvent*)event view:(UIView*)aView 
+- (void)updateWithTouchLocationEnded:(NSSet*)touches withEvent:(UIEvent*)event view:(UIView*)aView 
 {
-	BOOL touched = [super updateWithTouchLocationEnded:touches withEvent:event view:aView];
+	[super updateWithTouchLocationEnded:touches withEvent:event view:aView];
 	
+	[buttonBack touchEndedAtPoint:[Director sharedDirector].eventArgs.endPoint];
+	[buttonApply touchEndedAtPoint:[Director sharedDirector].eventArgs.endPoint];
 	[buttonTabOne touchEndedAtPoint:[Director sharedDirector].eventArgs.endPoint];
 	[buttonTabTwo touchEndedAtPoint:[Director sharedDirector].eventArgs.endPoint];
+	for (ButtonControl* iconButton in buttonIcons) 
+	{
+		[iconButton touchEndedAtPoint:[Director sharedDirector].eventArgs.endPoint];
+	}
 
 	[sliderRedColor touchEndedAtPoint:[Director sharedDirector].eventArgs.endPoint];
 	[sliderGreenColor touchEndedAtPoint:[Director sharedDirector].eventArgs.endPoint];
 	[sliderBlueColor touchEndedAtPoint:[Director sharedDirector].eventArgs.endPoint];
+	
+	[buttonTopLeft touchEndedAtPoint:[Director sharedDirector].eventArgs.endPoint];
+	[buttonMidLeft touchEndedAtPoint:[Director sharedDirector].eventArgs.endPoint];
+	[buttonBottomLeft touchEndedAtPoint:[Director sharedDirector].eventArgs.endPoint];
+	[buttonTopRight touchEndedAtPoint:[Director sharedDirector].eventArgs.endPoint];
+	[buttonMidRight touchEndedAtPoint:[Director sharedDirector].eventArgs.endPoint];
+	[buttonBottomRight touchEndedAtPoint:[Director sharedDirector].eventArgs.endPoint];	
 	
 	if([buttonTabOne activated] && [buttonTabOne enabled])
 	{
@@ -790,8 +735,6 @@
 		[buttonTabTwo setActivated:FALSE];
 		[self showColorTab];
 	}
-	
-	return touched;
 }
 
 - (void)updateWithAccelerometer:(UIAcceleration*)aAcceleration 
@@ -805,11 +748,14 @@
 		return;
 	
 	glPushMatrix();
-	
-	[imageBackgroundPet render];
+	[imagePreviewPetBackground render];
 	[previewPet render];
 	
-	[indicatorPlayer render];
+	[coinIndicatorUser render];
+	[treatIndicator render];
+	
+	[buttonBack render];
+	[buttonApply render];
 	
 	if([buttonTabOne selected])
 	{
@@ -821,6 +767,10 @@
 		[imageTabOne render];
 		[imageTabTwo render];
 	}
+	for (ButtonControl* iconButton in buttonIcons) 
+	{
+		[iconButton render];
+	}
 	
 	[sliderRedColor render];
 	[labelRedSlider render];
@@ -828,13 +778,17 @@
 	[labelGreenSlider render];
 	[sliderBlueColor render];
 	[labelBlueSlider render];
+	
+	[buttonTopLeft render];
+	[buttonMidLeft render];
+	[buttonBottomLeft render];
+	[buttonTopRight render];
+	[buttonMidRight render];
+	[buttonBottomRight render];	
 
 	[labelColor render];
 	[labelFeatures render];
-	//[coinIndicatorCost render];
-	
-	[super render];
-	
+	[coinIndicatorCost render];
 	glPopMatrix();
 }
 

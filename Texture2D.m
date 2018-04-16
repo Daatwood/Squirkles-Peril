@@ -108,14 +108,12 @@
                 (info == kCGImageAlphaFirst) ? YES : NO);
     
     // Check to see what pixel format the image is using
-	if(CGImageGetColorSpace(image)) 
-	{
+	if(CGImageGetColorSpace(image)) {
 		if(hasAlpha)
 			pixelFormat = kTexture2DPixelFormat_RGBA8888;
 		else
 			pixelFormat = kTexture2DPixelFormat_RGB565;
-	} 
-	else  //NOTE: No colorspace means a mask image
+	} else  //NOTE: No colorspace means a mask image
 		pixelFormat = kTexture2DPixelFormat_A8;
 	
 	

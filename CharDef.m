@@ -18,8 +18,7 @@
 
 - (id)initCharDefWithFontImage:(Image*)fontImage scale:(float)fontScale{
 	self = [super init];
-	if (self != nil) 
-	{
+	if (self != nil) {
 		// Reference the image file which contains the spritemap for the characters
 		image = fontImage;
 		[image setRotation:90];

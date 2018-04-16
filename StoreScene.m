@@ -3,17 +3,11 @@
 //  Squirkle's Peril
 //
 //  Created by Dustin Atwood on 2/8/11.
-//  Copyright 2011 Litlapps. All rights reserved.
+//  Copyright 2011 Dustin Atwood. All rights reserved.
 //
 
 #import "StoreScene.h"
 
-#define Button_Prev 1
-#define Button_Next 2
-#define Button_Game 3
-#define Button_Boost 4
-#define Button_VIP 5
-#define Button_Coin 6
 
 @implementation StoreScene
 
@@ -52,102 +46,76 @@
 	treatIndicatorCost = [[Indicator alloc] initAtScreenPercentage:CGPointMake(46, 34) withSize:0 
 													  currencyType:CurrencyType_Treat leftsideIcon:NO];
 	NSLog(@"Loading Buttons...60");
-	ButtonControl* button;
+	buttonBack = [[ButtonControl alloc] initAsButtonImageNamed:@"ButtonSmall" withText:@"Back" 
+											atScreenPercentage:CGPointMake(18.75, 93.54) isRotated:NO];
+	[buttonBack setTarget:self andAction:@selector(loadMenuScene)];
+	[buttonBack setButtonColourFilterRed:1.0 green:0.0 blue:0.0 alpha:1.0];
 	
-	button = [[ButtonControl alloc] initAsAtlasButtonImageNamed:@"ButtonSmall" withText:@"Back" withFontName:FONT21 
-											atScreenPercentage:CGPointMake(18.75, 93.54)];
-	[button setTarget:self andAction:@selector(loadMenuScene)];
-	[button setButtonColourFilterRed:1.0 green:0.0 blue:0.0 alpha:1.0];
-	[button setIdentifier:Button_Cancel];
-	[[super sceneControls] addObject:button];
-	[button release];
-	
-	button = [[ButtonControl alloc] initAsAtlasButtonImageNamed:@"ButtonSmall" withSubImageNamed:@"buttonPreviousArrow" 
-												atScreenPercentage:CGPointMake(10.5, 56.67)];
-	[button setTarget:self andAction:@selector(showNext)];
-	[button	setButtonColourFilterRed:0.5 green:0.5 blue:1.0 alpha:1.0];
-	CGRect newSize = [button boundingBox];
+	buttonPrevious = [[ButtonControl alloc] initAsButtonImageNamed:@"ButtonSmall" withSubImageNamed:@"buttonPreviousArrow" 
+												atScreenPercentage:CGPointMake(10.5, 56.67) isRotated:NO];
+	[buttonPrevious setTarget:self andAction:@selector(showNext)];
+	[buttonPrevious	setButtonColourFilterRed:0.5 green:0.5 blue:1.0 alpha:1.0];
+	CGRect newSize = [buttonPrevious boundingBox];
 	newSize.size = CGSizeMake(67.5, 185);
-	button.boundingBox = newSize;
-	[button setIdentifier:Button_Next];
-	[[super sceneControls] addObject:button];
-	[button release];
+	buttonPrevious.boundingBox = newSize;
 	
-	button = [[ButtonControl alloc] initAsAtlasButtonImageNamed:@"ButtonSmall" withSubImageNamed:@"buttonNextArrow" 
-												atScreenPercentage:CGPointMake(89.5, 56.67)];
-	[button setTarget:self andAction:@selector(showPrevious)];
-	[button	setButtonColourFilterRed:0.5 green:0.5 blue:1.0 alpha:1.0];
-	newSize = [button boundingBox];
+	buttonNext = [[ButtonControl alloc] initAsButtonImageNamed:@"ButtonSmall" withSubImageNamed:@"buttonNextArrow" 
+												atScreenPercentage:CGPointMake(89.5, 56.67) isRotated:NO];
+	[buttonNext setTarget:self andAction:@selector(showPrevious)];
+	[buttonNext	setButtonColourFilterRed:0.5 green:0.5 blue:1.0 alpha:1.0];
+	newSize = [buttonNext boundingBox];
 	newSize.size = CGSizeMake(67.5, 185);
-	button.boundingBox = newSize;
-	[button setIdentifier:Button_Prev];
-	[[super sceneControls] addObject:button];
-	[button release];
+	buttonNext.boundingBox = newSize;
 	
-	button = [[ButtonControl alloc] initAsAtlasButtonImageNamed:@"ButtonNormal" withText:@"Purchase" withFontName:FONT21
-											  atScreenPercentage:CGPointMake(78, 30)];
-	[button setTarget:self andAction:@selector(attemptPurchase)];
-	[button setButtonColourFilterRed:0.0 green:1.0 blue:0.0 alpha:1.0];
-	[button setIdentifier:Button_Action];
-	[[super sceneControls] addObject:button];
-	[button release];
+	buttonBuy = [[ButtonControl alloc] initAsButtonImageNamed:@"ButtonExtended" withText:@"Purchase" 
+											  atScreenPercentage:CGPointMake(78, 30) isRotated:NO];
+	[buttonBuy setTarget:self andAction:@selector(attemptPurchase)];
+	[buttonBuy setButtonColourFilterRed:0.0 green:1.0 blue:0.0 alpha:1.0];
 	
+	buttonCategoryGame = [[ButtonControl alloc] initAsButtonImageNamed:@"ButtonSmall" withText:@"NYI" 
+										   atScreenPercentage:CGPointMake(12.5, 7.5) isRotated:NO];
+	[buttonCategoryGame setTarget:self andAction:@selector(showCategoryGame)];
+	[buttonCategoryGame setButtonColourFilterRed:1.0 green:0.0 blue:0.0 alpha:1.0];
+	[buttonCategoryGame setFontColourFilterRed:1.0 green:0.0 blue:0.0 alpha:1.0];
 	
-	button = [[ButtonControl alloc] initAsAtlasButtonImageNamed:@"ButtonSmall" withText:@"NYI" withFontName:FONT21
-										   atScreenPercentage:CGPointMake(12.5, 7.5)];
-	[button setTarget:self andAction:@selector(showCategoryGame)];
-	[button setButtonColourFilterRed:1.0 green:0.0 blue:0.0 alpha:1.0];
-	[button setFontColourFilterRed:1.0 green:0.0 blue:0.0 alpha:1.0];
-	[button setIdentifier:Button_Game];
-	[[super sceneControls] addObject:button];
-	[button release];
+	buttonCategoryPower = [[ButtonControl alloc] initAsButtonImageNamed:@"ButtonSmall" withSubImageNamed:@"imageIconStorePower" 
+													atScreenPercentage:CGPointMake(37.5, 7.5) isRotated:NO];
+	[buttonCategoryPower setTarget:self andAction:@selector(showCategoryPower)];
+	[buttonCategoryPower setButtonColourFilterRed:1.0 green:0.0 blue:1.0 alpha:1.0];
+	[buttonCategoryPower setSubImageColourFilterRed:1.0 green:0.0 blue:1.0 alpha:1.0];
 	
-	button = [[ButtonControl alloc] initAsAtlasButtonImageNamed:@"ButtonSmall" withSubImageNamed:@"imageIconStorePower" 
-													atScreenPercentage:CGPointMake(37.5, 7.5)];
-	[button setTarget:self andAction:@selector(showCategoryPower)];
-	[button setButtonColourFilterRed:1.0 green:0.0 blue:1.0 alpha:1.0];
-	[button setImageColourFilterRed:1.0 green:0.0 blue:1.0 alpha:1.0];
-	[button setIdentifier:Button_Boost];
-	[[super sceneControls] addObject:button];
-	[button release];
+	buttonCategoryVIP = [[ButtonControl alloc] initAsButtonImageNamed:@"ButtonSmall" withText:@"NYI" 
+													atScreenPercentage:CGPointMake(62.5, 7.5) isRotated:NO];
+	[buttonCategoryVIP setTarget:self andAction:@selector(showCategoryVIP)];
+	[buttonCategoryVIP setButtonColourFilterRed:1.0 green:1.0 blue:0.0 alpha:1.0];
+	[buttonCategoryVIP setFontColourFilterRed:1.0 green:1.0 blue:0.0 alpha:1.0];
 	
-	button = [[ButtonControl alloc] initAsAtlasButtonImageNamed:@"ButtonSmall" withText:@"NYI" withFontName:FONT21
-													atScreenPercentage:CGPointMake(62.5, 7.5)];
-	[button setTarget:self andAction:@selector(showCategoryVIP)];
-	[button setButtonColourFilterRed:1.0 green:1.0 blue:0.0 alpha:1.0];
-	[button setFontColourFilterRed:1.0 green:1.0 blue:0.0 alpha:1.0];
-	[button setIdentifier:Button_VIP];
-	[[super sceneControls] addObject:button];
-	[button release];
+	buttonCategoryCurrency = [[ButtonControl alloc] initAsButtonImageNamed:@"ButtonSmall" withSubImageNamed:@"imageIconStoreCurrency" 
+												   atScreenPercentage:CGPointMake(87.5, 7.5) isRotated:NO];
+	[buttonCategoryCurrency setTarget:self andAction:@selector(showCategoryCurrencyCoins)];
+	[buttonCategoryCurrency setButtonColourFilterRed:1.0 green:0.5 blue:0.0 alpha:1.0];
+	[buttonCategoryCurrency setSubImageColourFilterRed:1.0 green:0.5 blue:0.0 alpha:1.0];
 	
-	button = [[ButtonControl alloc] initAsAtlasButtonImageNamed:@"ButtonSmall" withSubImageNamed:@"imageIconStoreCurrency" 
-												   atScreenPercentage:CGPointMake(87.5, 7.5)];
-	[button setTarget:self andAction:@selector(showCategoryCurrencyCoins)];
-	[button setButtonColourFilterRed:1.0 green:0.5 blue:0.0 alpha:1.0];
-	[button setImageColourFilterRed:1.0 green:0.5 blue:0.0 alpha:1.0];
-	[button setIdentifier:Button_Coin];
-	[[super sceneControls] addObject:button];
-	[button release];
-	
-	buttonBuyOne = [[ButtonControl alloc] initAsButtonImageNamed:@"buttonStoreBoost1" withText:@"" withFontName:FONT21
-											 atScreenPercentage:CGPointMake(36.33, 65.63)];
+	buttonBuyOne = [[ButtonControl alloc] initAsButtonImageNamed:@"buttonStoreBoost1" withText:@"" 
+											 atScreenPercentage:CGPointMake(36.33, 65.63) isRotated:NO];
 	[buttonBuyOne setTarget:self andAction:@selector(attemptPurchaseOne)];
+	NSLog(@"%F, %F", [buttonBuyOne boundingBox].size.width, [buttonBuyOne boundingBox].size.height );
 	
-	buttonBuyTwo = [[ButtonControl alloc] initAsButtonImageNamed:@"buttonStoreBoost5" withText:@"" withFontName:FONT21
-											  atScreenPercentage:CGPointMake(63.67, 65.63)];
+	buttonBuyTwo = [[ButtonControl alloc] initAsButtonImageNamed:@"buttonStoreBoost5" withText:@"" 
+											  atScreenPercentage:CGPointMake(63.67, 65.63) isRotated:NO];
 	[buttonBuyTwo setTarget:self andAction:@selector(attemptPurchaseTwo)];
 	
-	buttonBuyThree = [[ButtonControl alloc] initAsButtonImageNamed:@"buttonStoreBoost25" withText:@"" withFontName:FONT21
-											  atScreenPercentage:CGPointMake(36.33, 38.02)];
+	buttonBuyThree = [[ButtonControl alloc] initAsButtonImageNamed:@"buttonStoreBoost25" withText:@"" 
+											  atScreenPercentage:CGPointMake(36.33, 38.02) isRotated:NO];
 	[buttonBuyThree setTarget:self andAction:@selector(attemptPurchaseThree)];
 	
-	buttonBuyFour = [[ButtonControl alloc] initAsButtonImageNamed:@"buttonStoreBoost100" withText:@"" withFontName:FONT21
-											  atScreenPercentage:CGPointMake(63.67, 38.02)];
+	buttonBuyFour = [[ButtonControl alloc] initAsButtonImageNamed:@"buttonStoreBoost100" withText:@"" 
+											  atScreenPercentage:CGPointMake(63.67, 38.02) isRotated:NO];
 	[buttonBuyFour setTarget:self andAction:@selector(attemptPurchaseFour)];
 	
 	NSLog(@"Loading Images...80");
 	imagePreview = [[Image alloc] initWithImageNamed:@"CrystalPreview"];
-	[imagePreview setPositionAtScreenPrecentage:CGPointMake(50, 58)];
+	[imagePreview setPositionAtScreenPrecentage:CGPointMake(50, 58) isRotated:NO];
 
 	NSLog(@"Loading Varibles...100");
 	// Gets all items for the pet slots.
@@ -179,8 +147,9 @@
 		[[Director sharedDirector] startLoading];
 		[NSTimer scheduledTimerWithTimeInterval:0.1f target:self selector:@selector(startLoadScene) userInfo:nil repeats:NO];
 	}
-	[coinIndicator changeInitialValue:[[sharedSettingManager for:FileType_Player get:ProfileKey_Coins]intValue]];
-	[boostIndicator changeInitialValue:[[sharedSettingManager for:FileType_Player get:ProfileKey_Boost]intValue]];
+	[coinIndicator changeInitialValue:[[sharedSettingManager forProfileGet:ProfileKey_Coins]intValue]];
+	[treatIndicator changeInitialValue:[[sharedSettingManager forProfileGet:ProfileKey_Treats]intValue]];
+	[boostIndicator changeInitialValue:[[sharedSettingManager forProfileGet:ProfileKey_Boost]intValue]];
 	
 	[coinIndicatorCost changeInitialValue:0];
 }
@@ -197,7 +166,6 @@
 
 - (void)finalizePurchaseNamed:(NSString*)productName
 {
-	/*
 	if ([productName rangeOfString:@"coin"].location != NSNotFound) 
 	{
 		switch ([[productName substringFromIndex:[productName length] - 1] intValue]) 
@@ -266,7 +234,6 @@
 	{
 		NSLog(@"Cannot Process Purchase: %@", productName);
 	}
-	 */
 }
 
 - (void) attemptInAppPurchase:(NSNotification*)productIdentifier
@@ -275,6 +242,26 @@
     [[SKPaymentQueue defaultQueue] addPayment:payment];
 }
 
+/*
+- (void)finishTransaction:(SKPaymentTransaction *)transaction wasSuccessful:(BOOL)wasSuccessful
+{
+    // remove the transaction from the payment queue.
+    [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
+    /*
+    NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:transaction, @"transaction" , nil];
+    if (wasSuccessful)
+    {
+        // send out a notification that we’ve finished the transaction
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"STORE_PURCHASE_FINISH" object:self userInfo:userInfo];
+    }
+    else
+    {
+        // send out a notification for the failed transaction
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"STORE_PURCHASE_FAILED" object:self userInfo:userInfo];
+    }
+	 
+}
+*/
 - (void)completeTransaction:(SKPaymentTransaction *)transaction
 {
     [self finalizePurchaseNamed:transaction.payment.productIdentifier];
@@ -331,7 +318,6 @@
 }
 - (void) attemptPurchaseOne
 {
-	/*
 	switch (selectedCategoryIndex) 
 	{
 		case 1:
@@ -371,11 +357,9 @@
 		default:
 			break;
 	}
-	 */
 }
 - (void) attemptPurchaseTwo
 {
-	/*
 	switch (selectedCategoryIndex) 
 	{
 		case 1:
@@ -416,11 +400,9 @@
 		default:
 			break;
 	}
-	 */
 }
 - (void) attemptPurchaseThree
 {
-	/*
 	switch (selectedCategoryIndex) 
 	{
 		case 1:
@@ -461,11 +443,9 @@
 		default:
 			break;
 	}
-	 */
 }
 - (void) attemptPurchaseFour
 {
-	/*
 	switch (selectedCategoryIndex) 
 	{
 		case 1:
@@ -506,7 +486,6 @@
 		default:
 			break;
 	}
-	 */
 }
 
 - (void) showNext
@@ -537,10 +516,10 @@
 
 - (void) showCategoryGame
 {
-	[[super control:Button_Game] setFontColourFilterRed:1.0 green:1.0 blue:1.0 alpha:1.0];
-	[[super control:Button_Boost] setImageColourFilterRed:1.0 green:0.0 blue:1.0 alpha:1.0];
-	[[super control:Button_Coin] setImageColourFilterRed:1.0 green:0.5 blue:0.0 alpha:1.0];
-	[[super control:Button_VIP] setFontColourFilterRed:1.0 green:1.0 blue:0.0 alpha:1.0];
+	[buttonCategoryGame setFontColourFilterRed:1.0 green:1.0 blue:1.0 alpha:1.0];
+	[buttonCategoryPower setSubImageColourFilterRed:1.0 green:0.0 blue:1.0 alpha:1.0];
+	[buttonCategoryCurrency setSubImageColourFilterRed:1.0 green:0.5 blue:0.0 alpha:1.0];
+	[buttonCategoryVIP setFontColourFilterRed:1.0 green:1.0 blue:0.0 alpha:1.0];
 	selectedCategoryIndex = 0;
 	selectedItemIndex = 0;
 	[self reloadScene];
@@ -548,10 +527,10 @@
 
 - (void) showCategoryPower
 {
-	[[super control:Button_Game] setFontColourFilterRed:1.0 green:0.0 blue:0.0 alpha:1.0];
-	[[super control:Button_Boost] setImageColourFilterRed:1.0 green:1.0 blue:1.0 alpha:1.0];
-	[[super control:Button_Coin] setImageColourFilterRed:1.0 green:0.5 blue:0.0 alpha:1.0];
-	[[super control:Button_VIP] setFontColourFilterRed:1.0 green:1.0 blue:0.0 alpha:1.0];
+	[buttonCategoryGame setFontColourFilterRed:1.0 green:0.0 blue:0.0 alpha:1.0];
+	[buttonCategoryPower setSubImageColourFilterRed:1.0 green:1.0 blue:1.0 alpha:1.0];
+	[buttonCategoryCurrency setSubImageColourFilterRed:1.0 green:0.5 blue:0.0 alpha:1.0];
+	[buttonCategoryVIP setFontColourFilterRed:1.0 green:1.0 blue:0.0 alpha:1.0];
 	selectedCategoryIndex = 1;
 	selectedItemIndex = 0;
 	[self reloadScene];
@@ -559,10 +538,10 @@
 
 - (void) showCategoryVIP
 {
-	[[super control:Button_Game] setFontColourFilterRed:1.0 green:0.0 blue:0.0 alpha:1.0];
-	[[super control:Button_Boost] setImageColourFilterRed:1.0 green:0.0 blue:1.0 alpha:1.0];
-	[[super control:Button_Coin] setImageColourFilterRed:1.0 green:0.5 blue:0.0 alpha:1.0];
-	[[super control:Button_VIP] setFontColourFilterRed:1.0 green:1.0 blue:1.0 alpha:1.0];
+	[buttonCategoryGame setFontColourFilterRed:1.0 green:0.0 blue:0.0 alpha:1.0];
+	[buttonCategoryPower setSubImageColourFilterRed:1.0 green:0.0 blue:1.0 alpha:1.0];
+	[buttonCategoryCurrency setSubImageColourFilterRed:1.0 green:0.5 blue:0.0 alpha:1.0];
+	[buttonCategoryVIP setFontColourFilterRed:1.0 green:1.0 blue:1.0 alpha:1.0];
 	selectedCategoryIndex = 2;
 	selectedItemIndex = 0;
 	[self reloadScene];
@@ -570,10 +549,10 @@
 
 - (void) showCategoryCurrency
 {
-	[[super control:Button_Game] setFontColourFilterRed:1.0 green:0.0 blue:0.0 alpha:1.0];
-	[[super control:Button_Boost] setImageColourFilterRed:1.0 green:0.0 blue:1.0 alpha:1.0];
-	[[super control:Button_Coin] setImageColourFilterRed:1.0 green:1.0 blue:1.0 alpha:1.0];
-	[[super control:Button_VIP] setFontColourFilterRed:1.0 green:1.0 blue:0.0 alpha:1.0];
+	[buttonCategoryGame setFontColourFilterRed:1.0 green:0.0 blue:0.0 alpha:1.0];
+	[buttonCategoryPower setSubImageColourFilterRed:1.0 green:0.0 blue:1.0 alpha:1.0];
+	[buttonCategoryCurrency setSubImageColourFilterRed:1.0 green:1.0 blue:1.0 alpha:1.0];
+	[buttonCategoryVIP setFontColourFilterRed:1.0 green:1.0 blue:0.0 alpha:1.0];
 	selectedCategoryIndex = 3;
 	[self reloadScene];
 }
@@ -593,27 +572,27 @@
 {
 	if([[allItems objectAtIndex:selectedCategoryIndex] count] > 1)
 	{
-		[[super control:Button_Next] setEnabled:YES];
-		[[super control:Button_Prev] setEnabled:YES];
+		[buttonNext setEnabled:YES];
+		[buttonPrevious setEnabled:YES];
 	}
 	else
 	{
-		[[super control:Button_Next] setVisible:NO];
-		[[super control:Button_Prev] setVisible:NO];
+		[buttonNext setEnabled:NO];
+		[buttonPrevious setEnabled:NO];
 	}
 	switch (selectedCategoryIndex) 
 	{
 		case 0:
 		{
-			[labelCategory setText:@"Game Extras" atSceenPercentage:CGPointMake(50, 81.5)];
-			[labelDescription setText:@"Further Customize your Squirkle!" atSceenPercentage:CGPointMake(50, 19)];
+			[labelCategory setText:@"Game Extras (NNF)" atSceenPercentage:CGPointMake(50, 81.5)];
+			[labelDescription setText:@"Awesome little extras!" atSceenPercentage:CGPointMake(50, 19)];
 			[coinIndicatorCost setIsEnabled:NO];
 			[treatIndicatorCost setIsEnabled:NO];
-			[[super control:Button_Action] setVisible:NO];
-			[buttonBuyOne setVisible:NO];
-			[buttonBuyTwo setVisible:NO];
-			[buttonBuyThree setVisible:NO];
-			[buttonBuyFour setVisible:NO];
+			[buttonBuy setEnabled:NO];
+			[buttonBuyOne setEnabled:NO];
+			[buttonBuyTwo setEnabled:NO];
+			[buttonBuyThree setEnabled:NO];
+			[buttonBuyFour setEnabled:NO];
 			break;
 		}
 		case 1:
@@ -622,7 +601,7 @@
 			[labelDescription setText:@"Use Boost to summon your SpaceShip!" atSceenPercentage:CGPointMake(50, 19)];
 			[coinIndicatorCost setIsEnabled:NO];
 			[treatIndicatorCost setIsEnabled:NO];
-			[[super control:Button_Action] setVisible:NO];
+			[buttonBuy setEnabled:NO];
 			[buttonBuyOne setEnabled:YES];
 			[buttonBuyTwo setEnabled:YES];
 			[buttonBuyThree setEnabled:YES];
@@ -635,11 +614,11 @@
 			[labelDescription setText:@"Very Important People Only!" atSceenPercentage:CGPointMake(50, 19)];
 			[coinIndicatorCost setIsEnabled:YES];
 			[treatIndicatorCost setIsEnabled:YES];
-			[[super control:Button_Action] setEnabled:YES];
-			[buttonBuyOne setVisible:NO];
-			[buttonBuyTwo setVisible:NO];
-			[buttonBuyThree setVisible:NO];
-			[buttonBuyFour setVisible:NO];
+			[buttonBuy setEnabled:YES];
+			[buttonBuyOne setEnabled:NO];
+			[buttonBuyTwo setEnabled:NO];
+			[buttonBuyThree setEnabled:NO];
+			[buttonBuyFour setEnabled:NO];
 			break;
 		}
 		case 3:
@@ -648,7 +627,7 @@
 			[labelDescription setText:@"Use Coins and Treats to Unlock Stuff!" atSceenPercentage:CGPointMake(50, 19)];
 			[coinIndicatorCost setIsEnabled:NO];
 			[treatIndicatorCost setIsEnabled:NO];
-			[[super control:Button_Action] setVisible:NO];
+			[buttonBuy setEnabled:NO];
 			[buttonBuyOne setEnabled:YES];
 			[buttonBuyTwo setEnabled:YES];
 			[buttonBuyThree setEnabled:YES];
@@ -675,10 +654,10 @@
 			{
 				case 0:
 				{
-					[buttonBuyOne setButtonImageNamed:@"buttonStoreBoost1" withSubImageNamed:nil];
-					[buttonBuyTwo setButtonImageNamed:@"buttonStoreBoost5" withSubImageNamed:nil];
-					[buttonBuyThree setButtonImageNamed:@"buttonStoreBoost25" withSubImageNamed:nil];
-					[buttonBuyFour setButtonImageNamed:@"buttonStoreBoost100" withSubImageNamed:nil];
+					[buttonBuyOne setButtonImage:@"buttonStoreBoost1" withSelectionImage:NO];
+					[buttonBuyTwo setButtonImage:@"buttonStoreBoost5" withSelectionImage:NO];
+					[buttonBuyThree setButtonImage:@"buttonStoreBoost25" withSelectionImage:NO];
+					[buttonBuyFour setButtonImage:@"buttonStoreBoost100" withSelectionImage:NO];
 					break;
 				}
 				default:
@@ -696,18 +675,18 @@
 			{
 				case 0:
 				{
-					[buttonBuyOne setButtonImageNamed:@"buttonStoreCoin1" withSubImageNamed:nil];
-					[buttonBuyTwo setButtonImageNamed:@"buttonStoreCoin2" withSubImageNamed:nil];
-					[buttonBuyThree setButtonImageNamed:@"buttonStoreCoin3" withSubImageNamed:nil];
-					[buttonBuyFour setButtonImageNamed:@"buttonStoreCoin4" withSubImageNamed:nil];
+					[buttonBuyOne setButtonImage:@"buttonStoreCoin1" withSelectionImage:NO];
+					[buttonBuyTwo setButtonImage:@"buttonStoreCoin2" withSelectionImage:NO];
+					[buttonBuyThree setButtonImage:@"buttonStoreCoin3" withSelectionImage:NO];
+					[buttonBuyFour setButtonImage:@"buttonStoreCoin4" withSelectionImage:NO];
 					break;
 				}
 				case 1:
 				{
-					[buttonBuyOne setButtonImageNamed:@"buttonStoreTreat1" withSubImageNamed:nil];
-					[buttonBuyTwo setButtonImageNamed:@"buttonStoreTreat2" withSubImageNamed:nil];
-					[buttonBuyThree setButtonImageNamed:@"buttonStoreTreat3" withSubImageNamed:nil];
-					[buttonBuyFour setButtonImageNamed:@"buttonStoreTreat4" withSubImageNamed:nil];
+					[buttonBuyOne setButtonImage:@"buttonStoreTreat1" withSelectionImage:NO];
+					[buttonBuyTwo setButtonImage:@"buttonStoreTreat2" withSelectionImage:NO];
+					[buttonBuyThree setButtonImage:@"buttonStoreTreat3" withSelectionImage:NO];
+					[buttonBuyFour setButtonImage:@"buttonStoreTreat4" withSelectionImage:NO];
 					break;
 				}
 				default:
@@ -769,6 +748,15 @@
 			// The Scene is in the forefront and running.
 		case SceneState_Running:
 		{
+			[buttonBack touchBeganAtPoint:[Director sharedDirector].eventArgs.startPoint];
+			[buttonPrevious touchBeganAtPoint:[Director sharedDirector].eventArgs.startPoint];
+			[buttonNext touchBeganAtPoint:[Director sharedDirector].eventArgs.startPoint];
+			[buttonBuy touchBeganAtPoint:[Director sharedDirector].eventArgs.startPoint];
+			[buttonCategoryGame touchBeganAtPoint:[Director sharedDirector].eventArgs.startPoint];
+			[buttonCategoryPower touchBeganAtPoint:[Director sharedDirector].eventArgs.startPoint];
+			[buttonCategoryVIP touchBeganAtPoint:[Director sharedDirector].eventArgs.startPoint];
+			[buttonCategoryCurrency touchBeganAtPoint:[Director sharedDirector].eventArgs.startPoint];
+			
 			[buttonBuyOne touchBeganAtPoint:[Director sharedDirector].eventArgs.startPoint];
 			[buttonBuyTwo touchBeganAtPoint:[Director sharedDirector].eventArgs.startPoint];
 			[buttonBuyThree touchBeganAtPoint:[Director sharedDirector].eventArgs.startPoint];
@@ -805,6 +793,15 @@
 			// The Scene is in the forefront and running.
 		case SceneState_Running:
 		{
+			[buttonBack touchMovedAtPoint:[Director sharedDirector].eventArgs.movedPoint];
+			[buttonPrevious touchMovedAtPoint:[Director sharedDirector].eventArgs.movedPoint];
+			[buttonNext touchMovedAtPoint:[Director sharedDirector].eventArgs.movedPoint];
+			[buttonBuy touchMovedAtPoint:[Director sharedDirector].eventArgs.movedPoint];
+			[buttonCategoryGame touchMovedAtPoint:[Director sharedDirector].eventArgs.movedPoint];
+			[buttonCategoryPower touchMovedAtPoint:[Director sharedDirector].eventArgs.movedPoint];
+			[buttonCategoryVIP touchMovedAtPoint:[Director sharedDirector].eventArgs.movedPoint];
+			[buttonCategoryCurrency touchMovedAtPoint:[Director sharedDirector].eventArgs.movedPoint];
+			
 			[buttonBuyOne touchMovedAtPoint:[Director sharedDirector].eventArgs.movedPoint];
 			[buttonBuyTwo touchMovedAtPoint:[Director sharedDirector].eventArgs.movedPoint];
 			[buttonBuyThree touchMovedAtPoint:[Director sharedDirector].eventArgs.movedPoint];
@@ -829,18 +826,27 @@
 	}
 }
 
-- (BOOL)updateWithTouchLocationEnded:(NSSet*)touches withEvent:(UIEvent*)event view:(UIView*)aView 
+- (void)updateWithTouchLocationEnded:(NSSet*)touches withEvent:(UIEvent*)event view:(UIView*)aView 
 {
 	if(!isInitialized)
-		return FALSE;
+		return;
 	
-	BOOL touched = [super updateWithTouchLocationEnded:touches withEvent:event view:aView];
+	[super updateWithTouchLocationEnded:touches withEvent:event view:aView];
 	
 	switch (sceneState) 
 	{
 			// The Scene is in the forefront and running.
 		case SceneState_Running:
 		{
+			[buttonBack touchEndedAtPoint:[Director sharedDirector].eventArgs.endPoint];
+			[buttonPrevious touchEndedAtPoint:[Director sharedDirector].eventArgs.endPoint];
+			[buttonNext touchEndedAtPoint:[Director sharedDirector].eventArgs.endPoint];
+			[buttonBuy touchEndedAtPoint:[Director sharedDirector].eventArgs.endPoint];
+			[buttonCategoryGame touchEndedAtPoint:[Director sharedDirector].eventArgs.endPoint];
+			[buttonCategoryPower touchEndedAtPoint:[Director sharedDirector].eventArgs.endPoint];
+			[buttonCategoryVIP touchEndedAtPoint:[Director sharedDirector].eventArgs.endPoint];
+			[buttonCategoryCurrency touchEndedAtPoint:[Director sharedDirector].eventArgs.endPoint];
+			
 			[buttonBuyOne touchEndedAtPoint:[Director sharedDirector].eventArgs.endPoint];
 			[buttonBuyTwo touchEndedAtPoint:[Director sharedDirector].eventArgs.endPoint];
 			[buttonBuyThree touchEndedAtPoint:[Director sharedDirector].eventArgs.endPoint];
@@ -863,7 +869,6 @@
 			break;
 		}
 	}
-	return touched;
 }
 
 - (void)updateWithAccelerometer:(UIAcceleration*)aAcceleration 
@@ -880,12 +885,20 @@
 		return;
 	
 	glPushMatrix();
-
 	switch (sceneState) 
 	{
 			// The Scene is in the forefront and running.
 		case SceneState_Running:
 		{
+			[buttonBack render];
+			[buttonPrevious render];
+			[buttonNext render];
+			[buttonBuy render];
+			[buttonCategoryGame render];
+			[buttonCategoryPower render];
+			[buttonCategoryVIP render];
+			[buttonCategoryCurrency render];
+			
 			[buttonBuyOne render];
 			[buttonBuyTwo render];
 			[buttonBuyThree render];
@@ -920,9 +933,6 @@
 			break;
 		}
 	}
-	
-	[super render];
-	
 	glPopMatrix();
 }
 

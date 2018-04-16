@@ -31,13 +31,11 @@
 	
 	float rotation;
 	float maxLength;	
-	
-	BOOL leftAlignment;
 }
 
 @property(nonatomic, assign)float scale, rotation, maxLength;
 @property(nonatomic, retain)Image *image;
-@property(nonatomic, assign)BOOL useKerning, leftAlignment;
+@property(nonatomic, assign)BOOL useKerning;
 
 - (id)initWithFontImageNamed:(NSString*)fontImage controlFile:(NSString*)controlFile scale:(float)fontScale filter:(GLenum)filter;
 - (void)drawStringAt:(CGPoint)point text:(NSString*)text;
